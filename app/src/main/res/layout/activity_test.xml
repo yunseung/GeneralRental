@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/eip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ip"/>
+
+        <EditText
+            android:id="@+id/eport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="port"/>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/connect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:text="connect"/>
+
+            <Button
+                android:id="@+id/start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="start"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/finish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="finish"/>
+
+        <Button
+            android:id="@+id/scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="scan"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbprinter_a"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="printer A"/>
+
+            <RadioButton
+                android:id="@+id/rbprinter_b"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="printer B "/>
+
+            <RadioButton
+                android:id="@+id/rbprinter_ab"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="printer AB"/>
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/eassets_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ASSET_NO"/>
+
+        <EditText
+            android:id="@+id/eserial_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="SERIAL_NO"/>
+
+        <EditText
+            android:id="@+id/emodel_nm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="MODEL_NM"/>
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="add"/>
+
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/popup_alert_bg_color">
+
+    <LinearLayout
+        android:id="@+id/lay_alert_base"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:elevation="5dp"
+        android:background="@drawable/popup_alert_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/lay_alert_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/popup_alert_title_height"
+            android:background="@drawable/popup_alert_title_bg">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_alert_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/popup_alert_title_color"
+                    android:textSize="@dimen/popup_alert_text_title_size" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/popup_alert_line_height"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/popup_alert_line_color" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_alert_message"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/popup_alert_text_min_width"
+            android:maxWidth="@dimen/popup_alert_text_max_width"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/popup_alert_content_marginBottom"
+            android:layout_marginTop="@dimen/popup_alert_content_marginTop"
+            android:layout_marginLeft="@dimen/popup_alert_content_marginLeft"
+            android:layout_marginRight="@dimen/popup_alert_content_marginRight"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:minLines="3"
+            android:textColor="@color/popup_alert_content_color"
+            android:textSize="@dimen/popup_alert_text_content_size" />
+
+        <LinearLayout
+            android:id="@+id/lay_alert_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/popup_alert_padding_bottom"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/popup_alert_padding"
+            android:layout_marginRight="@dimen/popup_alert_padding">
+
+            <Button
+                android:id="@+id/btn_alert_cancel"
+                style="@style/StyleButtonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/popup_alert_button_height"
+                android:gravity="center"
+                android:text="취소"/>
+
+            <Button
+                android:id="@+id/btn_alert_other"
+                style="@style/StyleButtonA"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/popup_alert_button_height"
+                android:layout_marginLeft="@dimen/popup_alert_button_margin"
+                android:text="저장"/>
+
+            <Button
+                android:id="@+id/btn_alert_confirm"
+                style="@style/StyleButtonA"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/popup_alert_button_height"
+                android:layout_marginLeft="@dimen/popup_alert_button_margin"
+                android:text="저장"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

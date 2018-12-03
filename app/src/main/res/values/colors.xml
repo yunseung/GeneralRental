@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="gray_background">#ebebeb</color>
+    <color name="blue_text">#009eed</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#da3c34</color>
+    <color name="black_50_alpha">#80000000</color>
+
+    <!-- Button 색상 -->
+    <!-- Button Type A -->
+    <color name="button_type_a_n">#FFFFFFFF</color>
+    <color name="button_type_a_s">#FFFFFFFF</color>
+    <color name="button_type_a_d">#CFFFFFFF</color>
+    <!-- Button Type B -->
+    <color name="button_type_b_n">#FFDF453B</color>
+    <color name="button_type_b_s">#FFDF453B</color>
+    <color name="button_type_b_d">#66DF453B</color>
+    <!-- Button Type C -->
+    <color name="button_type_c_n">#FF666666</color>
+    <color name="button_type_c_s">#FF666666</color>
+    <color name="button_type_c_d">#59666666</color>
+    <!-- Button Type D -->
+    <color name="button_type_d_n">#FFFFFFFF</color>
+    <color name="button_type_d_s">#FFFFFFFF</color>
+    <color name="button_type_d_d">#7FFFFFFF</color>
+    <!-- Button Type BL -->
+    <color name="button_type_bl_n">#FF3892C9</color>
+    <color name="button_type_bl_s">#FF3892C9</color>
+    <color name="button_type_bl_d">#663892C9</color>
+
+    <!-- Button Search -->
+    <color name="button_search_n">#FFFFFFFF</color>
+    <color name="button_search_s">#FFA9ACB1</color>
+    <!-- Button Input Search -->
+    <color name="button_input_search_n">#FF999999</color>
+    <color name="button_input_search_d">#7F999999</color>
+    <color name="button_input_search_s">#FF999999</color>
+    <color name="button_input_search_p">#FFDF453B</color>
+    <!-- Button ComboBox -->
+    <color name="button_combobox_n">#FF999999</color>
+    <color name="button_combobox_d">#7F999999</color>
+    <color name="button_combobox_s">#FF999999</color>
+    <!-- Button Radio -->
+    <color name="button_radio_n">#FF999999</color>
+    <color name="button_radio_d">#7F999999</color>
+    <color name="button_radio_s">#FF999999</color>
+    <!-- Button CheckBox -->
+    <color name="button_checkbox_n">#FF999999</color>
+    <color name="button_checkbox_d">#7F999999</color>
+    <color name="button_checkbox_s">#FF999999</color>
+    <!-- Button Tab -->
+    <color name="button_tab_n">#FF999999</color>
+    <color name="button_tab_s">#FFDF453B</color>
+    <!-- Button ButtonTab -->
+    <color name="button_btn_tab_n">#FFDF453B</color>
+    <color name="button_btn_tab_s">#FFFFFFFF</color>
+    <!-- Menu Top Button -->
+    <color name="home_menu_button_n">#BEFFFFFF</color>
+    <color name="home_menu_button_s">#FFFFFFFF</color>
+    <color name="home_menu_text_color">#FFFFFFFF</color>
+    <!-- Text&Edit 색상 -->
+    <!-- TextView 정보 -->
+    <color name="textview_color_n">#FF999999</color>
+    <color name="textview_color_s">#FF999999</color>
+    <color name="textview_color_d">#7F999999</color>
+    <color name="textview_color_p">#FFDF453B</color>
+
+    <!-- Popup 테두리 색상 -->
+    <color name="popup_box_stroke">#E634445e</color>
+    <color name="popup_box_shadow">#77464646</color>
+    <!-- Popup Title Color -->
+    <color name="popup_title_color">#FFFFFFFF</color>
+    <color name="full_popup_title_color">#FF999999</color>
+    <!-- Popup Code Color -->
+    <color name="code_list_color">#333333</color>
+    <!-- Popup Code Line Color -->
+    <color name="list_line_color">#333333</color>
+
+    <!-- Alert Color -->
+    <color name="popup_alert_bg_color">#7F000000</color>
+    <color name="popup_alert_line_color">#FFE4E4E4</color>
+    <color name="popup_alert_title_color">#FF333333</color>
+    <color name="popup_alert_content_color">#FF666666</color>
+
+    <!-- PopupView Color -->
+    <color name="popup_view_out_bg_color">#7F000000</color>
+    <color name="popup_view_bg_color">#FFFFFFFF</color>
+    <color name="popup_view_top_bg">#FF42495B</color>
+    <color name="popup_view_title_color">#FFFFFFFF</color>
+    <color name="popup_view_sub_title_color">#FF666666</color>
+    <color name="popup_view_gray_bg_color">#FFE8E8E8</color>
+    <color name="popup_view_while_bg_color">#FFFFFFFF</color>
+    <color name="popup_view_list_title_color">#FF666666</color>
+    <color name="popup_view_list_item_text_color_n">#FF999999</color>
+    <color name="popup_view_list_item_text_color_s">#FFDF453B</color>
+
+    <!-- Progress Color -->
+    <color name="popup_progress_text_color">#FF666666</color>
+
+    <!-- Top Menu Color -->
+    <color name="home_menu_list_line_top">#7FFFFFFF</color>
+    <color name="home_menu_list_line_bottom">#4C000000</color>
+    <color name="home_menu_list_bg_n">#FF42495B</color>
+    <color name="home_menu_list_bg_s">#FFDF453B</color>
+
+    <!-- TableView 색상 -->
+    <color name="tableview_header_bg_r">#FFDB3C34</color>
+    <color name="tableview_header_bg_g">#A3A3A3</color>
+    <color name="tableview_header_text_color">#FFFFFF</color>
+    <color name="tableview_header_line1">#FFAA302A</color>
+    <color name="tableview_header_line1_g">#767676</color>
+    <color name="tableview_header_line2">#FFE9847D</color>
+    <color name="tableview_header_line2_g">#C8C8C8</color>
+    <color name="tableview_sum_text_color">#FFDB3C34</color>
+    <color name="tableview_sum_line1">#FFEE9794</color>
+    <color name="tableview_sum_top_line">#FFDB3C34</color>
+    <color name="tableview_column_text_color">#FF666666</color>
+    <color name="tableview_column_text_color_s">#FFDF453B</color>
+    <color name="tableview_column_bg_n">#FFFFFFFF</color>
+    <color name="tableview_column_bg_s">#FFFFFAE9</color>
+    <color name="tableview_column_line">#FFE4E4E4</color>
+
+    <!-- TableView Text Bg 색상 -->
+    <color name="tableview_column_text_bg_white">#FFFFFFFF</color>
+    <color name="tableview_column_text_bg_yellow">#FFDB9D62</color>
+    <color name="tableview_column_text_bg_red">#FFD45C5C</color>
+    <color name="tableview_column_text_bg_gray">#FFA7A7A7</color>
+    <color name="tableview_column_text_bg_green">#FF94AA68</color>
+    <color name="tableview_column_text_bg_pink">#FFDD557D</color>
+    <color name="tableview_column_text_bg_blue">#FF5281C6</color>
+    <color name="tableview_column_text_bg_indigo">#FF5773A8</color>
+    <color name="tableview_column_text_bg_cyan">#FF60ACAA</color>
+    <color name="tableview_column_text_bg_black">#FF636363</color>
+    <color name="tableview_column_text_bg_marker1">#66b327</color>
+    <color name="tableview_column_text_bg_marker2">#f79516</color>
+    <color name="tableview_column_text_bg_marker3">#df453b</color>
+    <color name="tableview_column_text_bg_marker4">#3d96f2</color>
+    <color name="tableview_column_text_bg_marker5">#926ff1</color>
+    <color name="tableview_column_text_bg_cancel">#858585</color>
+
+    <!-- Listview 색상-->
+    <color name="listview_row_text_n">#FF666666</color>
+    <color name="listview_row_text2_n">#FF999999</color>
+    <color name="listview_row_text_s">#FFDF453B</color>
+    <color name="listview_row_text2_s">#FFDF453B</color>
+    <color name="listview_row_line">#FFE0E0E0</color>
+    <color name="listview_row_bg_n">#FFF7F7F7</color>
+    <color name="listview_row_bg_s">#FFFFFFFF</color>
+
+    <!-- Screen Default Color -->
+    <color name="screen_top_bg_color">#FFE3E3E3</color>
+    <color name="screen_sub_bg_color">#FFF7F7F7</color>
+    <color name="screen_subject_big_text">#FF333333</color>
+    <color name="screen_subject_normal_text">#FF333333</color>
+
+    <!-- Line Color -->
+    <color name="line_red_color">#FFDF453B</color>
+
+    <!-- Keypad Color -->
+    <color name="keypad_bg_color">#FFF7F7F7</color>
+    <color name="keypad_text_color_n">#FF999999</color>
+    <color name="keypad_text_color_s">#FF42495B</color>
+    <color name="keypad_btn_bg_color_n">#FFFFFFFF</color>
+    <color name="keypad_btn_bg_color_s">#FFE8E8E8</color>
+    <color name="keypad_confirm_text_color_n">#FFDE716A</color>
+    <color name="keypad_confirm_text_color_s">#FFDE716A</color>
+    <color name="keypad_btn_confirm_bg_color_n">#FFFFFFFF</color>
+    <color name="keypad_btn_confirm_bg_color_s">#FFF9F1F0</color>
+    <color name="keypad_line_color">#FFE4E4E4</color>
+
+    <!-- Calendar Color -->
+    <color name="calendar_bg_color">#FFF7F7F7</color>
+    <color name="calendar_week_sun_color">#FFDF453B</color>
+    <color name="calendar_week_etc_color">#FF999999</color>
+    <color name="calendar_week_sat_color">#FF0F82D3</color>
+    <color name="calendar_month_text_color">#FF42495B</color>
+    <color name="calendar_day_text_color_d">#FFE1E1E1</color>
+    <color name="calendar_day_text_color_n">#FF999999</color>
+    <color name="calendar_day_text_color_s">#FF42495B</color>
+    <color name="calendar_day_sun_text_color_d">#FFF5C8C5</color>
+    <color name="calendar_day_sun_text_color_n">#FFDF453B</color>
+    <color name="calendar_day_sun_text_color_s">#FFDF453B</color>
+    <color name="calendar_day_sat_text_color_d">#FFB7DAF2</color>
+    <color name="calendar_day_sat_text_color_n">#FF0F82D3</color>
+    <color name="calendar_day_sat_text_color_s">#FF0F82D3</color>
+    <color name="calendar_day_bg_color_n">#FFFFFFFF</color>
+    <color name="calendar_day_bg_color_s">#FFE8E8E8</color>
+    <color name="calendar_day_today_line_color_n">#FF00AEEF</color>
+    <color name="calendar_day_today_line_color_s">#FF00AEEF</color>
+
+    <!-- Sales Calendar -->
+    <color name="sales_calendar_day_text">#FF999999</color>
+    <color name="sales_calendar_sun_text">#FFDF453B</color>
+    <color name="sales_calendar_sat_text">#FF0F82D3</color>
+    <color name="sales_calendar_year_text_n">#FF999999</color>
+    <color name="sales_calendar_year_text_s">#FFDF453B</color>
+    <color name="sales_calendar_year_bg">#FFF7F7F7</color>
+
+    <!-- Update Popup Color -->
+    <color name="update_popup_top_bg">#FFFFFFFF</color>
+    <color name="update_popup_btm_bg">#FFF6F5F6</color>
+
+    <!-- Balloon Popup Color -->
+    <color name="balloon_bg">#42495b</color>
+
+    <!-- Setting Color -->
+    <color name="common_code_text_n">#FF42485C</color>
+    <color name="common_code_text_s">#FFDF453B</color>
+
+    <!-- Button Radiobutton -->
+    <color name="part_radio_n">#FFb9b9b9</color>
+    <color name="part_radio_s">#FF42495b</color>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="conntection_time_out">100000</integer>
+    <integer name="read_time_out">100000</integer>
+    <integer name="animation_table_header_time">200</integer>
+    <integer name="animation_time_short_delay">500</integer>
+    <integer name="animation_time_short">600</integer>
+    <integer name="animation_time_long">700</integer>
+    <integer name="animation_time1000">1000</integer>
+</resources>

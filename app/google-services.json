@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "80374527697",
+    "firebase_url": "https://lotterentalgeneral.firebaseio.com",
+    "project_id": "lotterentalgeneral",
+    "storage_bucket": "lotterentalgeneral.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80374527697:android:16b55e8fd5a12386",
+        "android_client_info": {
+          "package_name": "com.lotterental.generalrental"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80374527697-34qp23ie81k87teh2bd6hfq2vjvfah5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDXf6Iy3jTC0d1Yl9sGItzh5uAipzAH7s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

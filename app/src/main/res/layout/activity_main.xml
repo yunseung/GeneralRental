@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <com.lotterental.generalrental.webview.LWebView
+            android:id="@+id/main_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:onClick="onScanClick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="scan"/>
+
+        <Button
+            android:onClick="onExcelClick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="excel"/>
+
+        <Button
+            android:onClick="onPrintClick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="print"/>
+
+    </LinearLayout>
+
+</layout>
