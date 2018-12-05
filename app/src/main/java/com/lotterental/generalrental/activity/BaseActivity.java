@@ -42,9 +42,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mWebView.clearCache(true);
-        mWebView.destroyDrawingCache();
-        mWebView.removeAllViews();
-        mWebView.destroy();
+        if (mWebView != null) {
+            mWebView.clearCache(true);
+            mWebView.destroyDrawingCache();
+            mWebView.removeAllViews();
+            mWebView.destroy();
+        }
     }
 }

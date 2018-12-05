@@ -14,10 +14,15 @@ import android.widget.Toast;
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
+import com.lotterental.generalrental.BuildConfig;
+import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityMainBinding;
 import com.lotterental.generalrental.webview.JavascriptAPI;
+import com.lotterental.generalrental.webview.JavascriptSender;
 import com.lotterental.generalrental.webview.LWebView;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,9 +47,6 @@ public class MainActivity extends BaseActivity {
 
         mWebView = mBinding.mainWebView;
 
-//        setContentView(R.layout.activity_main);
-//        mWebView = (LWebView)findViewById(R.id.main_web_view);
-
         initializeElements();
     }
 
@@ -56,8 +58,33 @@ public class MainActivity extends BaseActivity {
         mWebView.addJavascriptInterface(new JavaScriptBridge(MainActivity.this, mWebView, JavascriptAPI.class), JavaScriptBridge.CALL_NAME);
         mWebView.clearCache(true);
         mWebView.clearHistory();
-//        mWebView.loadUrl("10.106.13.148:8081/oam/mobile/as/asMain");
-        mWebView.loadUrl("https://www.naver.com");
+        mWebView.loadUrl(BuildConfig.WEB_URL);
+    }
+
+    public void startScanActivity(JSONObject obj, String callback) {
+        Intent i = new Intent(MainActivity.this, ScanActivity.class);
+        i.putExtra(JavaScriptBridge.PARAM, obj.toString());
+        i.putExtra(JavaScriptBridge.CALLBACK, callback);
+        startActivityForResult(i, Const.REQ_SCAN_PROCESS);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case Const.REQ_SCAN_PROCESS:
+                if (resultCode == RESULT_OK) {
+                    LLog.e(data.getStringExtra(JavaScriptBridge.CALLBACK));
+                    LLog.e(data.getStringExtra(JavaScriptBridge.PARAM));
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, data.getStringExtra(JavaScriptBridge.CALLBACK), data.getStringExtra(JavaScriptBridge.PARAM));
+                }
+                break;
+
+                default:
+                    break;
+        }
     }
 
     public void onScanClick(View v) {

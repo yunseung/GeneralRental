@@ -4,7 +4,10 @@ import android.content.Context;
 import android.webkit.WebView;
 
 import com.lotterental.common.jsbridge.JSBridge;
+import com.lotterental.common.jsbridge.JavaScriptBridge;
+import com.lotterental.generalrental.activity.MainActivity;
 
+import org.apache.log4j.chainsaw.Main;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +40,13 @@ public class JavascriptAPI extends JSBridge {
     public void onBackPressed(WebView webview, Context context, JSONObject json) throws JSONException {
         if (webview.canGoBack()) {
             webview.goBack();
+        }
+    }
+
+    @JSApi(invokeMethod = "onStartScanActivity", explain = "바코드 스캔 화면 시작", param = {""})
+    public void onStartSacnActivity(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof MainActivity) {
+            ((MainActivity) context).startScanActivity(json.getJSONObject(JavaScriptBridge.PARAM), json.getString(JavaScriptBridge.CALLBACK));
         }
     }
 }

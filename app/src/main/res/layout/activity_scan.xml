@@ -175,7 +175,7 @@
             android:id="@+id/ll_barcode_title"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_above="@id/view_barcode_scan"
+            android:layout_below="@id/view_barcode_scan"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:background="@color/button_type_c_d"

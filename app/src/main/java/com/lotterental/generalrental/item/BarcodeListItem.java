@@ -10,11 +10,9 @@ public class BarcodeListItem {
     private String barcode ;
     private String num ;
 
-    public void setBarcode(String b) {
-        barcode = b ;
-    }
-    public void setNum(String n) {
-        num = n ;
+    public BarcodeListItem(String num, String barcode) {
+        this.barcode = barcode;
+        this.num = num;
     }
 
     public String getBarcode() {

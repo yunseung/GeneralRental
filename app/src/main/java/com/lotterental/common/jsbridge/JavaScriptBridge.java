@@ -7,7 +7,9 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.lotterental.LLog;
 import com.lotterental.common.Common;
+import com.lotterental.generalrental.BuildConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,8 +73,7 @@ public class JavaScriptBridge {
                         if (annotation instanceof JSBridge.JSApi) {
                             JSBridge.JSApi bridge = (JSBridge.JSApi) annotation;
                             if (json.getString(JavaScriptBridge.API).equals(bridge.invokeMethod())) {
-                                if (Common.debug)
-                                    Log.d("JavaScriptBridge", " ++실행: " + bridge.invokeMethod() + "() 설명:" + bridge.explain() + " param:" + Arrays.toString(bridge.param()));
+                                LLog.e("JavaScriptBridge", " ++실행: " + bridge.invokeMethod() + "() 설명:" + bridge.explain() + " param:" + Arrays.toString(bridge.param()));
                                 methods[i].invoke(javaScriptApiClass.newInstance(), mWebView, mContext, json);
                                 return;
                             }

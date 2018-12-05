@@ -30,4 +30,7 @@
     <string name="permission_ncessary_check">필수 권한 체크가 되지 않았습니다 어플리케이션을 종료 합니다.</string>
     <string name="permission_ncessary_setting">[설정] > [어플리케이션] > [권한] 에서 어플리케이션 필수 권한설정을 할수 있습니다.</string>
 
+    <!-- msg -->
+    <string name="g5error">잘못된 서버 응답입니다.</string>
+
 </resources>

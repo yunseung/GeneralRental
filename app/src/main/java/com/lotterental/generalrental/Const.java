@@ -34,7 +34,7 @@ public class Const {
     /**
      * OCR
      */
-    public static final int REQ_OCR_ID = 10001;
+    public static final int REQ_SCAN_PROCESS = 10001;
     public static final int REQ_DOCUMENT_A4 = 10002;
     public static final int REQ_DOCUMENT_ETC = 10003;
     public static final int REQ_DOCUMENT_LPR = 10004;

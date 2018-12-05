@@ -10,10 +10,38 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
+
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file(SIGNED_STORE_FILE)   // gradle.properties 파일 참조 앱 빌드키
+            storePassword SIGNED_STORE_PASSWORD // gradle.properties 파일 참조 앱 빌드키
+            keyAlias SIGNED_KEY_ALIAS           // gradle.properties 파일 참조 앱 빌드키
+            keyPassword SIGNED_KEY_PASSWORD     // gradle.properties 파일 참조 앱 빌드키
+            v1SigningEnabled true               // 앱빌드 방식 필수 값
+            v2SigningEnabled true               // 앱빌드 방식 필수 값
+        }
+    }
+
+    buildTypes {
+
+        release {
+            signingConfig signingConfigs.release    // 빌드 키 이용
+            minifyEnabled false                     // 소스 축소
+            zipAlignEnabled true                    // 스토어 올리기위한 zip 정렬
+
+            //하단 부터 Build Variant에서 빌드선택후 빌드 하면 BuildConfig.Java파일에 변수가 생성됨.
+            buildConfigField "boolean", "IS_DEV",  "false"
+            buildConfigField "String",  "WEB_URL",  "\"\""
+            buildConfigField "String",  "API_URL", "\"\""
+        }
+
+        debug{
+            signingConfig signingConfigs.release
+
+            //하단 부터 Build Variant에서 빌드선택후 빌드 하면 BuildConfig.Java파일에 변수가 생성됨
+            buildConfigField "boolean", "IS_DEV",  "true"
+            buildConfigField "String",  "WEB_URL",  "\"http://10.106.13.148:8081/oam/mobile/login/loginSuccessMain\""
+            buildConfigField "String",  "API_URL", "\"http://10.106.13.148:8080/oam/mobile\""
         }
     }
 
@@ -36,6 +64,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.0'
     implementation 'com.google.firebase:firebase-auth:16.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
+    // HttpClient 라이브러리.
+    implementation 'com.android.volley:volley:1.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
