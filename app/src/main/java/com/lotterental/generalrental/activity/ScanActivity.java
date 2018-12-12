@@ -79,18 +79,18 @@ public class ScanActivity extends BaseActivity {
                 try {
                     JSONObject jsonParameter = new JSONObject();
 
-                    jsonParameter.put("vbeln",mVbeln);
-                    jsonParameter.put("zinout",mZinout);
-                    jsonParameter.put("reqno", mReqNo);
+                    jsonParameter.put("VBELN",mVbeln);
+                    jsonParameter.put("ZINOUT",mZinout);
+                    jsonParameter.put("REQNO", mReqNo);
 
                     ArrayList<JSONObject> list = new ArrayList<>();
 
                     for(int i = 0 ; i  <  mListViewItemList.size() ; i++ ){
                         JSONObject jsonSerge = new JSONObject();
-                        jsonSerge.put("vbeln", mVbeln);
-                        jsonSerge.put("zinout",mZinout);
-                        jsonSerge.put("serge", mListViewItemList.get(i).getBarcode());
-                        jsonSerge.put("reqno", mReqNo);
+                        jsonSerge.put("VBELN", mVbeln);
+                        jsonSerge.put("ZINOUT",mZinout);
+                        jsonSerge.put("SERGE", mListViewItemList.get(i).getBarcode());
+                        jsonSerge.put("REQNO", mReqNo);
                         list.add(jsonSerge);
                     }
 
@@ -119,7 +119,6 @@ public class ScanActivity extends BaseActivity {
         mZXingScannerView.setResultHandler(new ZXingScannerView.ResultHandler() {
             @Override
             public void handleResult(Result result) {
-                Toast.makeText(getApplicationContext(), result.getText(), Toast.LENGTH_LONG).show();
                 mZXingScannerView.resumeCameraPreview(this);
                 boolean isExist = false;
 

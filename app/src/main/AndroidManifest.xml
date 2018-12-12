@@ -30,6 +30,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.FullScanActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activity.ExcelActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -37,6 +43,12 @@
         </activity>
 
         <activity android:name=".activity.TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.ListViewTest">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

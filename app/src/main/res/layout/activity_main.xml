@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:onClick="onScanClick"
             android:text="scan"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <Button
             android:layout_width="match_parent"

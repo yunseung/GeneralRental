@@ -68,6 +68,12 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(i, Const.REQ_SCAN_PROCESS);
     }
 
+    public void startFullScanActivity(String callback) {
+        Intent i = new Intent(MainActivity.this, FullScanActivity.class);
+        i.putExtra(JavaScriptBridge.CALLBACK, callback);
+        startActivityForResult(i, Const.REQ_FULL_SCAN_PROCESS);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -82,13 +88,21 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
 
+            case Const.REQ_FULL_SCAN_PROCESS:
+                if (resultCode == RESULT_OK) {
+                    LLog.e(data.getStringExtra(JavaScriptBridge.CALLBACK));
+                    LLog.e(data.getStringExtra(JavaScriptBridge.PARAM));
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, data.getStringExtra(JavaScriptBridge.CALLBACK), data.getStringExtra(JavaScriptBridge.PARAM));
+                }
+                break;
+
                 default:
                     break;
         }
     }
 
     public void onScanClick(View v) {
-        startActivity(new Intent(MainActivity.this, ScanActivity.class));
+        startActivity(new Intent(MainActivity.this, ListViewTest.class));
     }
 
     public void onExcelClick(View v) {
