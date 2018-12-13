@@ -49,4 +49,15 @@ public abstract class BaseActivity extends AppCompatActivity {
             mWebView.destroy();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            finish();
+        }
+
+        super.onBackPressed();
+    }
 }

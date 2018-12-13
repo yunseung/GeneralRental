@@ -4,26 +4,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
         android:focusable="true"
+        android:background="@color/transparent"
         android:focusableInTouchMode="true"
-        android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:background="@color/color_f2f2f2"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="17dp"
-            android:paddingRight="17dp">
+            android:layout_height="65dp"
+            android:background="@color/color_f1f1f1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true">
             <EditText
-                android:layout_width="160dp"
+                android:layout_width="400dp"
                 android:layout_height="42dp"
                 android:background="@drawable/et_base"
-                android:hint="바코드 입력"
+                android:hint="바코드를 입력해주세요"
                 android:paddingLeft="15dp" />
 
             <Button
@@ -33,13 +37,14 @@
                 android:text="조회"
                 android:textColor="@color/color_000"
                 android:textSize="14dp" />
+            </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="150dp"
                 android:layout_height="42dp"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
                 android:background="@color/color_da291c"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
                 android:gravity="center"
                 android:onClick="onOpenExplorerClick"
                 android:orientation="horizontal">
@@ -61,16 +66,15 @@
                     android:textSize="15dp"
                     android:textStyle="bold" />
             </LinearLayout>
-        </LinearLayout>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="17dp"
-            android:paddingRight="17dp">
+            android:gravity="center_horizontal"
+            android:layout_marginTop="23dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,9 +138,10 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="213dp"
-            android:layout_marginTop="17dp"
+            android:layout_width="380dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="26dp"
+            android:layout_gravity="center_horizontal"
             android:background="@color/button_search_s">
 
             <TextView
@@ -144,7 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:text="S/N 4902111719597"
                 android:textColor="@color/white"
                 android:textSize="16dp"
@@ -152,12 +157,12 @@
 
             <RelativeLayout
                 android:id="@+id/view_barcode_scan"
-                android:layout_width="match_parent"
-                android:layout_height="159dp"
+                android:layout_width="380dp"
+                android:layout_height="180dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="39dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginBottom="39dp">
+                android:layout_marginBottom="24dp">
 
             </RelativeLayout>
 
@@ -189,16 +194,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="76dp"
+            android:layout_height="wrap_content"
             android:gravity="right"
             android:orientation="horizontal"
-            android:paddingLeft="17dp"
-            android:paddingTop="29dp"
-            android:paddingRight="17dp"
-            android:paddingBottom="13dp">
+            android:paddingLeft="20dp"
+            android:layout_marginTop="26dp"
+            android:paddingRight="20dp">
 
             <LinearLayout
-                android:layout_width="127dp"
+                android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn1"
                 android:gravity="center"
@@ -219,7 +223,7 @@
             </LinearLayout>
 
             <Button
-                android:layout_width="70dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn2"
                 android:text="초기화" />
@@ -229,6 +233,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -236,14 +241,14 @@
                 android:layout_height="37dp"
                 android:background="@drawable/list_title"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
                 android:paddingLeft="17dp"
-                android:paddingRight="17dp">
+                android:paddingRight="17dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:text='확인'
                     android:textColor="@color/black"
                     android:textSize="15dp"
@@ -251,8 +256,8 @@
 
                 <TextView
                     android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:text='설비번호'
                     android:textColor="@color/black"
                     android:textSize="15dp"
@@ -260,8 +265,8 @@
 
                 <TextView
                     android:layout_width="0dp"
+                    android:layout_weight="4"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text='모델명'
                     android:textColor="@color/black"
                     android:textSize="15dp"
@@ -269,8 +274,8 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    android:layout_height="wrap_content"
                     android:text='제조번호'
                     android:textColor="@color/black"
                     android:textSize="15dp"
@@ -281,7 +286,7 @@
                 android:id="@+id/lv_excel"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
         </LinearLayout>
 
     </LinearLayout>

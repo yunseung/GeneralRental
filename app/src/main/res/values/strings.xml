@@ -33,4 +33,8 @@
     <!-- msg -->
     <string name="g5error">잘못된 서버 응답입니다.</string>
 
+    <!-- 자산재고관리 -->
+    <string name="asset_cnt">자산대수</string>
+    <string name="scan_cnt">스캔대수</string>
+
 </resources>

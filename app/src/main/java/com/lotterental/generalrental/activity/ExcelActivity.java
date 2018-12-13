@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.google.zxing.Result;
+import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityExcelBinding;
 import com.lotterental.generalrental.databinding.ItemExcelDataBinding;
+import com.lotterental.generalrental.databinding.ItemItemRowBinding;
+import com.lotterental.generalrental.item.BarcodeListItem;
 import com.lotterental.generalrental.item.ExcelListItem;
 
 import java.io.File;
@@ -32,16 +36,33 @@ import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class ExcelActivity extends AppCompatActivity {
 
     private ActivityExcelBinding mBinding = null;
-    private ArrayList<ExcelListItem> mExcelList = null;
+    private ArrayList<ExcelListItem> mExcelList = new ArrayList<>();
+    private ZXingScannerView mZXingScannerView = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(ExcelActivity.this, R.layout.activity_excel);
+
+        startScan();
+    }
+
+    private void startScan() {
+        mZXingScannerView = new ZXingScannerView(getApplicationContext());
+        mBinding.viewBarcodeScan.addView(mZXingScannerView);
+        mZXingScannerView.setResultHandler(new ZXingScannerView.ResultHandler() {
+            @Override
+            public void handleResult(Result result) {
+                mZXingScannerView.resumeCameraPreview(this);
+
+            }
+        });
+        mZXingScannerView.startCamera();
     }
 
     public void onOpenExplorerClick(View v) {
@@ -102,35 +123,38 @@ public class ExcelActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri fileUri = data.getData();
-        String filePath = data.getData().getPath();
+
+        if (resultCode == RESULT_OK) {
+            Uri fileUri = data.getData();
+            String filePath = data.getData().getPath();
 //        String name = getContentResolver().getna
 //        File file = new File(getCacheDir(), name);
-        Workbook workbook = null;
-        Sheet sheet = null;
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(fileUri);
-            workbook = Workbook.getWorkbook(inputStream);
-            sheet = workbook.getSheet(0);
-            int maxColumn = 3;
-            int rowStart = 1;
-            int rowEnd = sheet.getColumn(maxColumn - 1).length - 1;
-            int columnStart = 0;
-            int columnEnd = sheet.getRow(2).length - 1;
+            Workbook workbook = null;
+            Sheet sheet = null;
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(fileUri);
+                workbook = Workbook.getWorkbook(inputStream);
+                sheet = workbook.getSheet(0);
+                int maxColumn = 3;
+                int rowStart = 1;
+                int rowEnd = sheet.getColumn(maxColumn - 1).length - 1;
+                int columnStart = 0;
+                int columnEnd = sheet.getRow(2).length - 1;
 
-            for (int row = rowStart; row <= rowEnd; row++) {
-                ExcelListItem item = new ExcelListItem();
-                item.setA(sheet.getCell(0, row).getContents());
-                item.setB(sheet.getCell(1, row).getContents());
-                item.setC(sheet.getCell(2, row).getContents());
+                for (int row = rowStart; row <= rowEnd; row++) {
+                    ExcelListItem item = new ExcelListItem();
+                    item.setA(sheet.getCell(0, row).getContents());
+                    item.setB(sheet.getCell(1, row).getContents());
+                    item.setC(sheet.getCell(2, row).getContents());
 
-                mExcelList.add(item);
+                    mExcelList.add(item);
+                }
+            } catch (IOException | BiffException e) {
+                Common.printException(e);
+            } finally {
+                mBinding.lvExcel.setAdapter(new ExcelListAdapter());
+                workbook.close();
             }
-        } catch (IOException | BiffException e) {
-            Common.printException(e);
-        } finally {
-            mBinding.listExcel.setAdapter(new ExcelListAdapter());
-            workbook.close();
         }
 
     }
@@ -154,19 +178,19 @@ public class ExcelActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final ItemExcelDataBinding binding;
+            final ItemItemRowBinding binding;
             if (convertView == null) {
-                convertView = LayoutInflater.from(ExcelActivity.this).inflate(R.layout.item_excel_data, null);
+                convertView = LayoutInflater.from(ExcelActivity.this).inflate(R.layout.item_item_row, null);
                 binding = DataBindingUtil.bind(convertView);
                 convertView.setTag(binding);
             } else {
-                binding = (ItemExcelDataBinding) convertView.getTag();
+                binding = (ItemItemRowBinding) convertView.getTag();
             }
 
-            binding.tvA.setText(mExcelList.get(position).getA());
-            binding.tvB.setText("");
-            binding.tvC.setText("");
-            return null;
+            binding.machineNo.setText(mExcelList.get(position).getA());
+            binding.modelNm.setText(mExcelList.get(position).getB());
+            binding.serialNo.setText(mExcelList.get(position).getC());
+            return binding.getRoot();
         }
     }
 }

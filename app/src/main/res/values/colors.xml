@@ -3,6 +3,14 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="transparent">#00000000</color>
+    <color name="color_f2f2f2">#f2f2f2</color>
+    <color name="color_f1f1f1">#f1f1f1</color>
+    <color name="color_da291c">#da291c</color>
+    <color name="color_000">#000</color>
+    <color name="color_1f91ff">#1f91ff</color>
+    <color name="color_eb3c42">#eb3c42</color>
+    <color name="color_e0e0e0">#e0e0e0</color>
 
     <color name="gray_background">#ebebeb</color>
     <color name="blue_text">#009eed</color>
