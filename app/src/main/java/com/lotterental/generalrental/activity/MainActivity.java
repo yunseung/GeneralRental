@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onScanClick(View v) {
-        startActivity(new Intent(MainActivity.this, ListViewTest.class));
+        startActivity(new Intent(MainActivity.this, ScanActivity.class));
     }
 
     public void onExcelClick(View v) {

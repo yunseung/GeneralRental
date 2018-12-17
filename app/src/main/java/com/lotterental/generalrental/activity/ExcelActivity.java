@@ -13,14 +13,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.google.zxing.Result;
-import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityExcelBinding;
-import com.lotterental.generalrental.databinding.ItemExcelDataBinding;
 import com.lotterental.generalrental.databinding.ItemItemRowBinding;
-import com.lotterental.generalrental.item.BarcodeListItem;
 import com.lotterental.generalrental.item.ExcelListItem;
+import com.lotterental.generalrental.util.LPermission;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +47,17 @@ public class ExcelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(ExcelActivity.this, R.layout.activity_excel);
 
-        startScan();
+        LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                startScan();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
     }
 
     private void startScan() {
@@ -66,18 +74,43 @@ public class ExcelActivity extends AppCompatActivity {
     }
 
     public void onOpenExplorerClick(View v) {
-        String[] mimeTypes = {"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}; // .xls & .xlsx
+        // String[] mimeTypes = {"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}; // .xls & .xlsx
 
+        LPermission.getInstance().checkStoragePermission(this, new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                excelImport();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
+
+    }
+
+    public void onExportExcelClick(View v) {
+        LPermission.getInstance().checkStoragePermission(this, new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                excelExport();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
+    }
+
+    private void excelImport() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         {
             intent.setType("application/vnd.ms-excel\",\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet/*");
             startActivityForResult(Intent.createChooser(intent, "ChooseFile"), 11);
         }
-    }
-
-    public void onExportExcelClick(View v) {
-        excelExport();
     }
 
     private void excelExport() {

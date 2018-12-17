@@ -19,6 +19,7 @@ import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityScanBinding;
 import com.lotterental.generalrental.databinding.ItemScannerCodeBinding;
 import com.lotterental.generalrental.item.BarcodeListItem;
+import com.lotterental.generalrental.util.LPermission;
 import com.lotterental.generalrental.webview.JavascriptSender;
 
 import org.json.JSONArray;
@@ -50,27 +51,29 @@ public class ScanActivity extends BaseActivity {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_scan);
 
-        try {
-            JSONObject obj = new JSONObject(getIntent().getStringExtra(JavaScriptBridge.PARAM));
-            mCallback = getIntent().getStringExtra(JavaScriptBridge.CALLBACK);
+        if (getIntent().getStringExtra(JavaScriptBridge.PARAM) != null) {
+            try {
+                JSONObject obj = new JSONObject(getIntent().getStringExtra(JavaScriptBridge.PARAM));
+                mCallback = getIntent().getStringExtra(JavaScriptBridge.CALLBACK);
 
-            mBinding.tvTotal.setText(obj.getString("TITLE"));
-            mBinding.tvTotalNum.setText(obj.getString("TOTALCT"));
-            mReqNo = obj.getString("REQNO");
-            mVbeln = obj.getString("VBELN");
-            mZinout = obj.getString("ZINOUT");
+                mBinding.tvTotal.setText(obj.getString("TITLE"));
+                mBinding.tvTotalNum.setText(obj.getString("TOTALCT"));
+                mReqNo = obj.getString("REQNO");
+                mVbeln = obj.getString("VBELN");
+                mZinout = obj.getString("ZINOUT");
 
-            JSONArray list = obj.getJSONArray("LIST");
-            for (int i = 0; i < list.length(); i++) {
-                mListViewItemList.add(new BarcodeListItem(Integer.toString(i + 1), ((JSONObject)list.get(i)).getString("SERGE")));
+                JSONArray list = obj.getJSONArray("LIST");
+                for (int i = 0; i < list.length(); i++) {
+                    mListViewItemList.add(new BarcodeListItem(Integer.toString(i + 1), ((JSONObject) list.get(i)).getString("SERGE")));
+                }
+
+                Collections.reverse(mListViewItemList);
+
+                mAdapter = new BarcodeDataAdapter(this);
+                mBinding.listViewBarcode.setAdapter(mAdapter);
+            } catch (JSONException e) {
+                Common.printException(e);
             }
-
-            Collections.reverse(mListViewItemList);
-
-            mAdapter = new BarcodeDataAdapter(this);
-            mBinding.listViewBarcode.setAdapter(mAdapter);
-        } catch (JSONException e) {
-            Common.printException(e);
         }
 
         mBinding.btBarcodeListSave.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +113,17 @@ public class ScanActivity extends BaseActivity {
         });
 
 
-        startScan();
+        LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                startScan();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
     }
 
     private void startScan() {
@@ -142,7 +155,9 @@ public class ScanActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mZXingScannerView.stopCamera();
+        if (mZXingScannerView != null) {
+            mZXingScannerView.stopCamera();
+        }
     }
 
     private class BarcodeDataAdapter extends BaseAdapter {

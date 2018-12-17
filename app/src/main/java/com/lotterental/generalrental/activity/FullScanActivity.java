@@ -16,6 +16,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class FullScanActivity extends AppCompatActivity {
     private ActivityFullScanBinding mBinding = null;
+    private ZXingScannerView mZXingScannerView = null;
 
     private String mCallback = null;
 
@@ -31,12 +32,12 @@ public class FullScanActivity extends AppCompatActivity {
     }
 
     private void startScan() {
-        final ZXingScannerView zXingScannerView = new ZXingScannerView(getApplicationContext());
-        mBinding.viewBarcodeScan.addView(zXingScannerView);
-        zXingScannerView.setResultHandler(new ZXingScannerView.ResultHandler() {
+        mZXingScannerView = new ZXingScannerView(getApplicationContext());
+        mBinding.viewBarcodeScan.addView(mZXingScannerView);
+        mZXingScannerView.setResultHandler(new ZXingScannerView.ResultHandler() {
             @Override
             public void handleResult(Result result) {
-                zXingScannerView.resumeCameraPreview(this);
+                mZXingScannerView.resumeCameraPreview(this);
 
                 Intent i = new Intent();
                 i.putExtra(JavaScriptBridge.PARAM, result.getText());
@@ -45,6 +46,14 @@ public class FullScanActivity extends AppCompatActivity {
                 finish();
             }
         });
-        zXingScannerView.startCamera();
+        mZXingScannerView.startCamera();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mZXingScannerView != null) {
+            mZXingScannerView.stopCamera();
+        }
     }
 }
