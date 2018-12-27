@@ -1,5 +1,7 @@
 package com.lotterental.generalrental.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -55,9 +57,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
-            finish();
-        }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("앱을 종료 하시겠습니까?");
+            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-        super.onBackPressed();
+                }
+            });
+
+            builder.create();
+            builder.show();
+        }
     }
 }

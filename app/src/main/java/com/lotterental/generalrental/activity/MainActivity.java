@@ -215,6 +215,10 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(i, Const.REQ_SCAN_PROCESS);
     }
 
+    public void startExcelActivity() {
+        startActivity(new Intent(MainActivity.this, ExcelActivity.class));
+    }
+
     public void startFullScanActivity(String callback) {
         Intent i = new Intent(MainActivity.this, FullScanActivity.class);
         i.putExtra(JavaScriptBridge.CALLBACK, callback);
@@ -267,11 +271,9 @@ public class MainActivity extends BaseActivity {
 
     public void onExcelClick(View v) {
 //        startActivity(new Intent(MainActivity.this, ExcelActivity.class));
-        selectDevice();
     }
 
     public void onPrintClick(View v) {
-//        startActivity(new Intent(MainActivity.this, TestActivity.class));
-        start();
+        startActivity(new Intent(MainActivity.this, ScanActivity.class));
     }
 }

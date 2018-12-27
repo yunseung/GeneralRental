@@ -1,12 +1,12 @@
 package com.lotterental.generalrental.network;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.webkit.WebView;
 
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +15,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean> {
     private WebView mWebView = null;
@@ -37,9 +36,19 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
         String type;
         String pdaModelNr;
         String deviceId;
+        String cmdCode;
+        JSONArray list;
         try {
-            host = jsonObjects[0].getString("host");
-            port = jsonObjects[0].getInt("port");
+            host = jsonObjects[0].getString("PRINT_IP");
+            port = jsonObjects[0].getInt("PORT");
+            cmdCode = jsonObjects[0].getString("CMD_CODE");
+            deviceId = jsonObjects[0].getString("DEVICE_ID");
+            list = jsonObjects[0].getJSONArray("list");
+            if (deviceId.length() < 12) {
+                for (int i = deviceId.length(); i <= 12; i++) {
+                    deviceId = new StringBuffer(deviceId).append("0").toString();
+                }
+            }
         } catch (JSONException e) {
             Common.printException(e);
             return false;
@@ -62,16 +71,18 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
 
             try (ByteArrayOutputStream bos1 = new ByteArrayOutputStream()) {
                 try (ByteArrayOutputStream bos2 = new ByteArrayOutputStream()) {
-                    bos2.write("13 ".getBytes("UTF-8"));
+                    bos2.write(cmdCode.getBytes("UTF-8"));
 
-                    bos2.write("60090477".getBytes("UTF-8"));
-                    bos2.write(0x11);
-                    bos2.write("MY52090792".getBytes("UTF-8"));
-                    bos2.write(0x11);
-                    bos2.write("N9020A".getBytes("UTF-8"));
-                    bos2.write(0x11);
-                    bos2.write("\r\n".getBytes("UTF-8"));
-
+                    // TODO IP 설정 callback, sharedPreferences 저장..????
+                    for (int i = 0; i < list.length(); i++) {
+                        bos2.write(list.getJSONObject(i).getString("ASSET_NO").getBytes("UTF-8"));
+                        bos2.write(0x11);
+                        bos2.write(list.getJSONObject(i).getString("SERIAL_NO").getBytes("UTF-8"));
+                        bos2.write(0x11);
+                        bos2.write(list.getJSONObject(i).getString("MODEL_NM").getBytes("UTF-8"));
+                        bos2.write(0x11);
+                        bos2.write("\r\n".getBytes("UTF-8"));
+                    }
                     bos2.write(0x13);
                     bos2.write(0x04);
 
@@ -81,7 +92,7 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
                     bos1.write("ninebytes".getBytes("UTF-8"));
                     bos1.write("twelvebytess".getBytes("UTF-8"));
                     bos1.write(data);
-                } catch (IOException e) {
+                } catch (IOException | JSONException e) {
                     Common.printException(e);
                 }
 

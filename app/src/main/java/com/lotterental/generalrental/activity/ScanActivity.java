@@ -2,6 +2,7 @@ package com.lotterental.generalrental.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,6 +51,8 @@ public class ScanActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_scan);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         if (getIntent().getStringExtra(JavaScriptBridge.PARAM) != null) {
             try {
@@ -111,8 +114,11 @@ public class ScanActivity extends BaseActivity {
 
             }
         });
+    }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
         LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
             @Override
             public void onPermissionGranted() {
@@ -153,9 +159,10 @@ public class ScanActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         if (mZXingScannerView != null) {
+            mZXingScannerView.stopCameraPreview();
             mZXingScannerView.stopCamera();
         }
     }

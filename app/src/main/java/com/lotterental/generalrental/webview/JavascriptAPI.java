@@ -50,6 +50,13 @@ public class JavascriptAPI extends JSBridge {
         }
     }
 
+    @JSApi(invokeMethod = "onStartExcelActivity", explain = "바코드 스캔 화면 시작", param = {""})
+    public void onStartExcelActivity(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof MainActivity) {
+            ((MainActivity) context).startExcelActivity();
+        }
+    }
+
     @JSApi(invokeMethod = "onStartFullScanActivity", explain = "바코드 스캔 화면 시작", param = {""})
     public void onStartFullScanActivity(WebView webView, Context context, JSONObject json) throws JSONException {
         if (context instanceof MainActivity) {

@@ -1,6 +1,8 @@
 package com.lotterental.generalrental.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.google.zxing.Result;
+import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityExcelBinding;
@@ -46,6 +49,12 @@ public class ExcelActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(ExcelActivity.this, R.layout.activity_excel);
+
+        if (mBinding.getRoot().getId() == R.id.large) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
 
         LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
             @Override
