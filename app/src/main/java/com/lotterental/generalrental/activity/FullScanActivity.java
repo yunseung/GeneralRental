@@ -11,6 +11,7 @@ import com.lotterental.common.jsbridge.JavaScriptBridge;
 import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityFullScanBinding;
+import com.lotterental.generalrental.util.LPermission;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -28,7 +29,18 @@ public class FullScanActivity extends AppCompatActivity {
 
         mCallback = getIntent().getStringExtra(JavaScriptBridge.CALLBACK);
 
-        startScan();
+
+        LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                startScan();
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
     }
 
     private void startScan() {

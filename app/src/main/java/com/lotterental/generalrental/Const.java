@@ -16,6 +16,8 @@ public class Const {
 
     public static final int REQ_SCAN_PROCESS = 10001;
     public static final int REQ_FULL_SCAN_PROCESS = 10002;
-    public static final String RES_SCAN_DATA = "scanData";
+
+    public static final int BT_REQUEST_ENABLE = 20;
+    public static final int MESSAGE_BARCODE = 2;
 
 }
