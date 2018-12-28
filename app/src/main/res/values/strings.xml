@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">General Rental</string>
+    <string name="app_name">자산관리M Test</string>
 
     <!-- 공통 -->
     <string name="confirm">확인</string>

@@ -50,11 +50,14 @@ public class ExcelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(ExcelActivity.this, R.layout.activity_excel);
 
-        if (mBinding.getRoot().getId() == R.id.large) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        } else {
+        if (mBinding.getRoot().getId() == R.id.normal) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
             @Override
@@ -67,6 +70,15 @@ public class ExcelActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mZXingScannerView != null) {
+            mZXingScannerView.stopCameraPreview();
+            mZXingScannerView.stopCamera();
+        }
     }
 
     private void startScan() {

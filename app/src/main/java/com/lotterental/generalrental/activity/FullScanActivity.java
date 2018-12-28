@@ -28,7 +28,9 @@ public class FullScanActivity extends AppCompatActivity {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_full_scan);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        if (mBinding.getRoot().getId() == R.id.normal) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
 
         mCallback = getIntent().getStringExtra(JavaScriptBridge.CALLBACK);
 

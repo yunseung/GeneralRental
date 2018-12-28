@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 public class LPreferences {
     private static final String UUID = "UUID"; //앱 처음시작
     private static final String APP_FIRST_LAUNCH = "APP_FIRST_LAUNCH";
-    private static final String DOMAIN = "DOMAIN";
+    private static final String TOKEN = "TOKEN";
 
     public static final String PREF_NAME = "ibkc_ods.pref";
 
@@ -53,14 +53,14 @@ public class LPreferences {
         return pref.getBoolean(key, defValue);
     }
 
-    public static void setDomain(Context context, String domain) {
+    public static void setToken(Context context, String domain) {
         assert context != null;
-        setString(context, DOMAIN, domain);
+        setString(context, TOKEN, domain);
     }
 
-    public static String getDomain(Context context) {
+    public static String getToken(Context context) {
         assert context != null;
-        return getString(context, DOMAIN, "");
+        return getString(context, TOKEN, "");
     }
     public static String getUUID(Context context) {
         assert context != null;

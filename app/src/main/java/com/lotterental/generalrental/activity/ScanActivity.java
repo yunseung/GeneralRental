@@ -52,7 +52,9 @@ public class ScanActivity extends BaseActivity {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_scan);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        if (mBinding.getRoot().getId() == R.id.normal) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
 
         if (getIntent().getStringExtra(JavaScriptBridge.PARAM) != null) {
             try {

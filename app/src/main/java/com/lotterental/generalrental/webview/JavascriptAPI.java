@@ -7,7 +7,6 @@ import com.lotterental.common.jsbridge.JSBridge;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
 import com.lotterental.generalrental.activity.MainActivity;
 
-import org.apache.log4j.chainsaw.Main;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,10 +63,17 @@ public class JavascriptAPI extends JSBridge {
         }
     }
 
-    @JSApi(invokeMethod = "onStartPrintSocket", explain = "웹뷰에서 받은 바코드 데이터를 프린터 서버로 소켓 전송", param = {""})
+    @JSApi(invokeMethod = "startPrintSocket", explain = "웹뷰에서 받은 바코드 데이터를 프린터 서버로 소켓 전송", param = {""})
     public void onStartPrintScoket(WebView webView, Context context, JSONObject json) throws JSONException {
         if (context instanceof  MainActivity) {
-            ((MainActivity) context).onStartPrintSocket(json.getJSONObject(JavaScriptBridge.PARAM), json.getString(JavaScriptBridge.CALLBACK));
+            ((MainActivity) context).startPrintSocket(json.getJSONObject(JavaScriptBridge.PARAM), json.getString(JavaScriptBridge.CALLBACK));
+        }
+    }
+
+    @JSApi(invokeMethod = "onStartPhoneCall", explain = "웹뷰에서 받은 바코드 데이터를 프린터 서버로 소켓 전송", param = {""})
+    public void onStartPhoneCall(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof  MainActivity) {
+            ((MainActivity) context).startPhoneCall(json.getJSONObject(JavaScriptBridge.PARAM));
         }
     }
 }

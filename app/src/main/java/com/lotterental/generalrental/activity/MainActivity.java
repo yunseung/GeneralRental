@@ -1,16 +1,11 @@
 package com.lotterental.generalrental.activity;
 
-import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
-import android.nfc.NfcAdapter;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,10 +14,8 @@ import android.os.Message;
 import android.os.ParcelUuid;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Toast;
 
 import com.PointMobile.PMSyncService.BluetoothChatService;
-import com.PointMobile.PMSyncService.Result;
 import com.PointMobile.PMSyncService.SendCommand;
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
@@ -32,21 +25,15 @@ import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityMainBinding;
 import com.lotterental.generalrental.network.PrinterSocketAsyncTask;
+import com.lotterental.generalrental.util.preferences.LPreferences;
 import com.lotterental.generalrental.webview.JavascriptAPI;
 import com.lotterental.generalrental.webview.JavascriptSender;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
 
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding mBinding = null;
@@ -61,6 +48,10 @@ public class MainActivity extends BaseActivity {
 
 
         mBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+
+        if (mBinding.getRoot().getId() == R.id.normal) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
 
         mWebView = mBinding.mainWebView;
 
@@ -126,57 +117,17 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        for (String list : listItems) {
-            LLog.e(list);
+        if (listItems.size() > 0) {
+            final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(items[0].toString().substring(items[0].length() - 17));
+            mChatService.connect(device);
         }
-        LLog.e("listItems length : " + listItems.size());
-        final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(items[0].toString().substring(items[0].length() - 17));
-        mChatService.connect(device);
 
-//        builder.setItems(items, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                if (which == mBluetoothAdapter.getBondedDevices().size()) {
-//                    // 취소
-//                } else {
-////                    connectToSelectedDevices(items[which].toString().substring(items[which].length()- 17));
-//                    LLog.e("+++ " + items[which].toString().substring(items[which].length() - 17));
-//                    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(items[which].toString().substring(items[which].length() - 17));
-//
-//                    mChatService.connect(device);
-//                }
-//            }
-//        });
-//
-//        final AlertDialog alert = builder.create();
-//        alert.show();
-
-    }
-
-    private void start() {
-        LLog.e("ChatService State : " + mChatService.getState());
-        if (mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-            Result result;
-            result = SendCommand.ScanSetTrigger();
-
-            if (result == Result.Fail) {
-                result = SendCommand.ScanSetTrigger();
-                if (result == Result.Fail) {
-                    Toast.makeText(getApplicationContext(), "Failed scan trigger", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Not Conneted Bluetooth..", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setupChat() {
-        LLog.e("+++ ON SETUP CHAT +++");
-
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
-
         SendCommand.SendCommandInit(mChatService, mHandler);
     }
 
@@ -225,13 +176,24 @@ public class MainActivity extends BaseActivity {
         startActivityForResult(i, Const.REQ_FULL_SCAN_PROCESS);
     }
 
-    public void onStartPrintSocket(JSONObject obj, String callback) {
+    public void startPrintSocket(JSONObject obj, String callback) {
         PrinterSocketAsyncTask task = new PrinterSocketAsyncTask(mWebView, callback);
         if (Build.VERSION.SDK_INT >= 11/*HONEYCOMB*/) {
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, obj);
         } else {
             task.execute(obj);
         }
+    }
+
+    public void startPhoneCall(JSONObject obj) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:"+ obj.getString("phone_no")));
+            startActivity(intent);
+        } catch (JSONException | SecurityException e) {
+            Common.printException(e);
+        }
+
     }
 
 
@@ -270,10 +232,11 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onExcelClick(View v) {
-//        startActivity(new Intent(MainActivity.this, ExcelActivity.class));
+        startActivity(new Intent(MainActivity.this, ExcelActivity.class));
     }
 
     public void onPrintClick(View v) {
-        startActivity(new Intent(MainActivity.this, ScanActivity.class));
+//        startActivity(new Intent(MainActivity.this, ScanActivity.class));
+        LLog.e("TOKEN IS : " + LPreferences.getToken(this));
     }
 }
