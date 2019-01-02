@@ -10,9 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Toast;
 
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.zxing.Result;
 import com.lotterental.common.Common;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
@@ -21,7 +19,6 @@ import com.lotterental.generalrental.databinding.ActivityScanBinding;
 import com.lotterental.generalrental.databinding.ItemScannerCodeBinding;
 import com.lotterental.generalrental.item.BarcodeListItem;
 import com.lotterental.generalrental.util.LPermission;
-import com.lotterental.generalrental.webview.JavascriptSender;
 
 import org.json.JSONArray;
 import org.json.JSONException;

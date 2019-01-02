@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">자산관리M Test</string>
+    <string name="app_name">자산관리M\nTest</string>
 
     <!-- 공통 -->
     <string name="confirm">확인</string>
