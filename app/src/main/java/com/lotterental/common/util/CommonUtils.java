@@ -377,7 +377,6 @@ public class CommonUtils {
     @SuppressLint("MissingPermission")
     public static String getDeviceIMEI(Context context) {
         TelephonyManager Info = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-
         try {
             return Info.getDeviceId();
         } catch (SecurityException e) {

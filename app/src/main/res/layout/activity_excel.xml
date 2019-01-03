@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
+        android:background="@color/white"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:gravity="center_vertical"
         android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp">
+
+            <Button
+                android:id="@+id/btn_close"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/close"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="17dp"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -151,16 +166,13 @@
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
-            <RelativeLayout
+            <com.journeyapps.barcodescanner.DecoratedBarcodeView
                 android:id="@+id/view_barcode_scan"
                 android:layout_width="match_parent"
-                android:layout_height="159dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="39dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="39dp">
-
-            </RelativeLayout>
+                android:layout_height="200dp"
+                android:layout_below="@id/ll_barcode_data"
+                app:zxing_scanner_layout="@layout/custom_barcode_scanner_excel">
+            </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -230,6 +242,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <LinearLayout

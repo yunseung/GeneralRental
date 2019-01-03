@@ -1,30 +1,30 @@
 package com.lotterental.generalrental.activity;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.ParcelUuid;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Toast;
 
-import com.PointMobile.PMSyncService.BluetoothChatService;
-import com.PointMobile.PMSyncService.SendCommand;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
+import com.lotterental.common.util.CommonUtils;
 import com.lotterental.generalrental.BuildConfig;
 import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityMainBinding;
 import com.lotterental.generalrental.network.PrinterSocketAsyncTask;
+import com.lotterental.generalrental.util.LPermission;
 import com.lotterental.generalrental.util.preferences.LPreferences;
 import com.lotterental.generalrental.webview.JavascriptAPI;
 import com.lotterental.generalrental.webview.JavascriptSender;
@@ -32,20 +32,13 @@ import com.lotterental.generalrental.webview.JavascriptSender;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding mBinding = null;
-    // Local Bluetooth adapter
-    private BluetoothAdapter mBluetoothAdapter = null;
-    // Member object for the chat services
-    private BluetoothChatService mChatService = null;
+    private String mCallback = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         mBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
@@ -55,96 +48,25 @@ public class MainActivity extends BaseActivity {
 
         mWebView = mBinding.mainWebView;
 
+        LPermission.getInstance().checkPhoneStatePermission(getApplicationContext(), new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
+
         initializeElements();
-
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Performing this check in onResume() covers the case in which BT was
-        // not enabled during onStart(), so we were paused to enable it...
-        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (mChatService != null) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
-                // Start the Bluetooth chat services
-                mChatService.start();
-
-                selectDevice();
-            }
-        }
+    protected void handleMassageBarcode(String barcode) {
+        super.handleMassageBarcode(barcode);
+        JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", barcode);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // If BT is not on, request that it be enabled.
-        // setupChat() will then be called during onActivityResult
-        if (!mBluetoothAdapter.isEnabled()) {
-            LLog.e("+++ mBluetoothAdapter.isEnabled +++");
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, Const.BT_REQUEST_ENABLE);
-            // Otherwise, setup the chat session
-        } else {
-            if (mChatService == null)
-                setupChat();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mChatService.stop();
-    }
-
-    private void selectDevice() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("장치 선택");
-
-        List<String> listItems = new ArrayList<>();
-        // TODO bondedDevice 가져오는 순서가.. 최근 등록된 애부터 가져오는게 아니라 이름 순으로 가져오는 느낌임.. 테스트 필요..
-        for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
-            // bluetooth type check
-            if (device.fetchUuidsWithSdp()) {
-                ParcelUuid[] uu = device.getUuids();
-                for (ParcelUuid u : uu) {
-                    if (u.getUuid().toString().toUpperCase().equals("00001101-0000-1000-8000-00805F9B34FB")) {
-                        listItems.add(device.getName() + "\n" + device.getAddress());
-                    }
-                }
-            }
-        }
-
-        if (listItems.size() > 0) {
-            final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
-            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(items[0].toString().substring(items[0].length() - 17));
-            mChatService.connect(device);
-        }
-
-    }
-
-    private void setupChat() {
-        // Initialize the BluetoothChatService to perform bluetooth connections
-        mChatService = new BluetoothChatService(this, mHandler);
-        SendCommand.SendCommandInit(mChatService, mHandler);
-    }
-
-
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                // Bluetooth Receive Handling
-                case Const.MESSAGE_BARCODE:
-                    byte[] BarcodeBuff = (byte[]) msg.obj;
-                    String barcode = new String(BarcodeBuff, 0, msg.arg1);
-                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", barcode);
-                    break;
-            }
-        }
-    };
 
     /**
      * activity elements initialize.
@@ -155,25 +77,31 @@ public class MainActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearHistory();
         mWebView.loadUrl(BuildConfig.WEB_URL);
-
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
     public void startScanActivity(JSONObject obj, String callback) {
-        Intent i = new Intent(MainActivity.this, ScanActivity.class);
+        mCallback = callback;
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(ScanActivity.class);
+        integrator.setOrientationLocked(false);
+        Intent i = integrator.createScanIntent();
         i.putExtra(JavaScriptBridge.PARAM, obj.toString());
-        i.putExtra(JavaScriptBridge.CALLBACK, callback);
-        startActivityForResult(i, Const.REQ_SCAN_PROCESS);
+        startActivityForResult(i, IntentIntegrator.REQUEST_CODE);
     }
 
     public void startExcelActivity() {
-        startActivity(new Intent(MainActivity.this, ExcelActivity.class));
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(ExcelActivity.class);
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
     }
 
     public void startFullScanActivity(String callback) {
-        Intent i = new Intent(MainActivity.this, FullScanActivity.class);
-        i.putExtra(JavaScriptBridge.CALLBACK, callback);
-        startActivityForResult(i, Const.REQ_FULL_SCAN_PROCESS);
+        mCallback = callback;
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(FullScanActivity.class);
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
     }
 
     public void startPrintSocket(JSONObject obj, String callback) {
@@ -188,12 +116,26 @@ public class MainActivity extends BaseActivity {
     public void startPhoneCall(JSONObject obj) {
         try {
             Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:"+ obj.getString("phone_no")));
+            intent.setData(Uri.parse("tel:" + obj.getString("TEL_NUM")));
             startActivity(intent);
         } catch (JSONException | SecurityException e) {
             Common.printException(e);
         }
 
+    }
+
+    public void reqAppInfo(String callback) {
+        JSONObject jsonParam = new JSONObject();
+        try {
+            jsonParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
+            jsonParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            jsonParam.put("APP_VERSION", pInfo.versionName);
+        } catch (PackageManager.NameNotFoundException | JSONException e) {
+            Common.printException(e);
+        }
+
+        JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, jsonParam);
     }
 
 
@@ -202,6 +144,13 @@ public class MainActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
+            case IntentIntegrator.REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                    String re = scanResult.getContents();
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, re);
+                }
+                break;
             case Const.REQ_SCAN_PROCESS:
                 if (resultCode == RESULT_OK) {
                     LLog.e(data.getStringExtra(JavaScriptBridge.CALLBACK));
@@ -210,25 +159,18 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
 
-            case Const.REQ_FULL_SCAN_PROCESS:
-                if (resultCode == RESULT_OK) {
-                    LLog.e(data.getStringExtra(JavaScriptBridge.CALLBACK));
-                    LLog.e(data.getStringExtra(JavaScriptBridge.PARAM));
-                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, data.getStringExtra(JavaScriptBridge.CALLBACK), data.getStringExtra(JavaScriptBridge.PARAM));
-                }
-                break;
-
-            case Const.BT_REQUEST_ENABLE:
-                setupChat();
-                break;
-
             default:
                 break;
         }
     }
 
+
     public void onScanClick(View v) {
-        startActivity(new Intent(MainActivity.this, ScanActivity.class));
+//        startActivity(new Intent(MainActivity.this, ScanActivity.class));
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(ScanActivity.class);
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
     }
 
     public void onExcelClick(View v) {

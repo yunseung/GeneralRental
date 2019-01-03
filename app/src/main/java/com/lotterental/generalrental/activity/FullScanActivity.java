@@ -1,29 +1,35 @@
 package com.lotterental.generalrental.activity;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.zxing.Result;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.CaptureManager;
+import com.journeyapps.barcodescanner.DecoratedBarcodeView;
+import com.journeyapps.barcodescanner.DefaultDecoderFactory;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
-import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityFullScanBinding;
 import com.lotterental.generalrental.util.LPermission;
 
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import java.util.Arrays;
+import java.util.Collection;
+
 
 public class FullScanActivity extends AppCompatActivity {
     private ActivityFullScanBinding mBinding = null;
-    private ZXingScannerView mZXingScannerView = null;
+//    private ZXingScannerView mZXingScannerView = null;
+
+    private CaptureManager capture;
+    private DecoratedBarcodeView barcodeScannerView;
 
     private String mCallback = null;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_full_scan);
@@ -34,15 +40,10 @@ public class FullScanActivity extends AppCompatActivity {
 
         mCallback = getIntent().getStringExtra(JavaScriptBridge.CALLBACK);
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
             @Override
             public void onPermissionGranted() {
-                startScan();
+                startScan(savedInstanceState);
             }
 
             @Override
@@ -50,32 +51,42 @@ public class FullScanActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
 
-    private void startScan() {
-        mZXingScannerView = new ZXingScannerView(getApplicationContext());
-        mBinding.viewBarcodeScan.addView(mZXingScannerView);
-        mZXingScannerView.setResultHandler(new ZXingScannerView.ResultHandler() {
-            @Override
-            public void handleResult(Result result) {
-                mZXingScannerView.resumeCameraPreview(this);
-
-                Intent i = new Intent();
-                i.putExtra(JavaScriptBridge.PARAM, result.getText());
-                i.putExtra(JavaScriptBridge.CALLBACK, mCallback);
-                setResult(RESULT_OK, i);
-                finish();
-            }
-        });
-        mZXingScannerView.startCamera();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        if (mZXingScannerView != null) {
-            mZXingScannerView.stopCameraPreview();
-            mZXingScannerView.stopCamera();
-        }
+    protected void onResume() {
+        super.onResume();
+        if (capture != null)
+            capture.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (capture != null)
+            capture.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (capture != null)
+            capture.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    private void startScan(Bundle savedInstanceState) {
+        barcodeScannerView = mBinding.viewBarcodeScan;
+        Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39);
+        barcodeScannerView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
+        barcodeScannerView.initializeFromIntent(getIntent());
+        capture = new CaptureManager(this, barcodeScannerView);
+        capture.initializeFromIntent(getIntent(), savedInstanceState);
+        capture.decode();
     }
 }

@@ -90,4 +90,33 @@ public class LPermission {
 
                 }).check();
     }
+
+    /**
+     * 휴대폰 상태 접근 퍼미션
+     *
+     * @param context
+     * @param permissionGrantedListener
+     */
+    public void checkPhoneStatePermission(final Context context, final PermissionGrantedListener permissionGrantedListener) {
+        TedPermission.with(context)
+                .setGotoSettingButtonText(R.string.setting)
+                .setDeniedMessage(R.string.permission_ncessary_setting)
+                .setPermissions(Manifest.permission.READ_PHONE_STATE)
+                .setPermissionListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        if (permissionGrantedListener != null) {
+                            permissionGrantedListener.onPermissionGranted();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                        if (permissionGrantedListener != null) {
+                            permissionGrantedListener.onPermissionDenied();
+                        }
+                    }
+
+                }).check();
+    }
 }

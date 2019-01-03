@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/large"
@@ -8,11 +9,13 @@
         android:orientation="vertical">
 
 
-        <RelativeLayout
+        <com.journeyapps.barcodescanner.DecoratedBarcodeView
             android:id="@+id/view_barcode_scan"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/ll_barcode_data"></RelativeLayout>
+            android:layout_below="@id/ll_barcode_data"
+            app:zxing_scanner_layout="@layout/custom_barcode_scanner_full">
+        </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
     </LinearLayout>
 

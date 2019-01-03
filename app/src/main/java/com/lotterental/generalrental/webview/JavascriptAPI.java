@@ -70,10 +70,17 @@ public class JavascriptAPI extends JSBridge {
         }
     }
 
-    @JSApi(invokeMethod = "onStartPhoneCall", explain = "웹뷰에서 받은 바코드 데이터를 프린터 서버로 소켓 전송", param = {""})
+    @JSApi(invokeMethod = "onStartPhoneCall", explain = "웹뷰에서 전달받은 전화번호로 전화걸기.", param = {""})
     public void onStartPhoneCall(WebView webView, Context context, JSONObject json) throws JSONException {
         if (context instanceof  MainActivity) {
             ((MainActivity) context).startPhoneCall(json.getJSONObject(JavaScriptBridge.PARAM));
+        }
+    }
+
+    @JSApi(invokeMethod = "reqAppInfo", explain = "device unique id, fcm token, app version 전달.", param = {""})
+    public void reqAppInfo(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof  MainActivity) {
+            ((MainActivity) context).reqAppInfo(json.getString(JavaScriptBridge.CALLBACK));
         }
     }
 }
