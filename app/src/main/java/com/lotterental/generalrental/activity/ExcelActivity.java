@@ -2,10 +2,12 @@ package com.lotterental.generalrental.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +33,12 @@ import com.lotterental.generalrental.util.LPermission;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,10 +54,14 @@ import jxl.write.WriteException;
 public class ExcelActivity extends BaseActivity {
 
     private ActivityExcelBinding mBinding = null;
+
+    private ExcelListAdapter mAdapter = null;
     private ArrayList<ExcelListItem> mExcelList = new ArrayList<>();
 
-    private CaptureManager capture;
-    private DecoratedBarcodeView barcodeScannerView;
+    private CaptureManager capture = null;
+    private DecoratedBarcodeView barcodeScannerView = null;
+
+    private String mExcelFileName = null;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -82,6 +91,8 @@ public class ExcelActivity extends BaseActivity {
                 finish();
             }
         });
+
+        mAdapter = new ExcelListAdapter();
     }
 
     @Override
@@ -118,8 +129,9 @@ public class ExcelActivity extends BaseActivity {
     private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
-            LLog.e("+++++++++++++++++++++++++++++++++++++++++++++++++++++++" + result.getText());
-        }
+            // 스캔 결과가 excel list 에 있는 eqNo 와 같은게 있다면 체크한다.
+            dataSetCheck(result.getText());
+    }
 
         @Override
         public void possibleResultPoints(List<ResultPoint> resultPoints) {
@@ -130,7 +142,17 @@ public class ExcelActivity extends BaseActivity {
     @Override
     protected void handleMassageBarcode(String barcode) {
         super.handleMassageBarcode(barcode);
-        Toast.makeText(getApplicationContext(), barcode, Toast.LENGTH_SHORT).show();
+        dataSetCheck(barcode);
+    }
+
+    private void dataSetCheck(String barcode) {
+        // 스캔 결과가 excel list 에 있는 eqNo 와 같은게 있다면 체크한다.
+        for (int i = 0; i < mExcelList.size(); i++) {
+            if ((mExcelList.get(i).getEqNo()).equals(barcode)) {
+                mExcelList.get(i).setIsExist("완료");
+            }
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     public void onOpenExplorerClick(View v) {
@@ -154,7 +176,11 @@ public class ExcelActivity extends BaseActivity {
         LPermission.getInstance().checkStoragePermission(this, new LPermission.PermissionGrantedListener() {
             @Override
             public void onPermissionGranted() {
-                excelExport();
+                if (mExcelList.size() > 0) {
+                    excelExport();
+                } else {
+                    Toast.makeText(getApplicationContext(), "내보낼 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -175,7 +201,8 @@ public class ExcelActivity extends BaseActivity {
 
     private void excelExport() {
         File sd = Environment.getExternalStorageDirectory();
-        String csvFile = "test11111.xls";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+        String csvFile = mExcelFileName.substring(0, mExcelFileName.length()-4) + sdf.format(new Date()) + ".xls";
 
         File directory = new File(sd.getAbsolutePath());
 
@@ -192,24 +219,22 @@ public class ExcelActivity extends BaseActivity {
 
             WritableSheet sheetA = writableWorkbook.createSheet("sheet A", 0);
 
-            sheetA.addCell(new Label(0, 0, "sheet A 1"));
-            sheetA.addCell(new Label(1, 0, "sheet A 2"));
-            sheetA.addCell(new Label(0, 1, "sheet A 3"));
-            sheetA.addCell(new Label(1, 1, "sheet A 4"));
+            int rowCnt = mExcelList.size();
 
-            //Excel sheetB represents second sheet
-            WritableSheet sheetB = writableWorkbook.createSheet("sheet B", 1);
-
-            // column and row titles
-            sheetB.addCell(new Label(0, 0, "sheet B 1"));
-            sheetB.addCell(new Label(1, 0, "sheet B 2"));
-            sheetB.addCell(new Label(0, 1, "sheet B 3"));
-            sheetB.addCell(new Label(1, 1, "sheet B 4"));
+            for (int i = 0; i < rowCnt; i++) {
+                sheetA.addCell(new Label(0, i, mExcelList.get(i).getEqNo()));
+                sheetA.addCell(new Label(1, i, mExcelList.get(i).getModelNm()));
+                sheetA.addCell(new Label(2, i, mExcelList.get(i).getSerialNo()));
+                sheetA.addCell(new Label(3, i, mExcelList.get(i).getIsExist()));
+            }
 
             writableWorkbook.write();
             writableWorkbook.close();
+
+            Toast.makeText(getApplicationContext(), "엑셀 내보내기 완료", Toast.LENGTH_SHORT).show();
         } catch (IOException | WriteException e) {
             Common.printException(e);
+            Toast.makeText(getApplicationContext(), "엑셀 내보내기 실패", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,9 +244,22 @@ public class ExcelActivity extends BaseActivity {
 
         if (resultCode == RESULT_OK) {
             Uri fileUri = data.getData();
-            String filePath = data.getData().getPath();
-//        String name = getContentResolver().getna
-//        File file = new File(getCacheDir(), name);
+            File excelFile = new File(fileUri.toString());
+
+            if ((fileUri.toString()).startsWith("content://")) {
+                Cursor cursor = null;
+                try {
+                    cursor = getContentResolver().query(fileUri, null, null, null, null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        mExcelFileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                } finally {
+                    cursor.close();
+                }
+            } else if ((fileUri.toString()).startsWith("file://")) {
+                mExcelFileName = excelFile.getName();
+            }
+
             Workbook workbook = null;
             Sheet sheet = null;
             try {
@@ -236,16 +274,16 @@ public class ExcelActivity extends BaseActivity {
 
                 for (int row = rowStart; row <= rowEnd; row++) {
                     ExcelListItem item = new ExcelListItem();
-                    item.setA(sheet.getCell(0, row).getContents());
-                    item.setB(sheet.getCell(1, row).getContents());
-                    item.setC(sheet.getCell(2, row).getContents());
+                    item.setEqNo(sheet.getCell(0, row).getContents());
+                    item.setModelNm(sheet.getCell(1, row).getContents());
+                    item.setSerialNo(sheet.getCell(2, row).getContents());
 
                     mExcelList.add(item);
                 }
             } catch (IOException | BiffException e) {
                 Common.printException(e);
             } finally {
-                mBinding.lvExcel.setAdapter(new ExcelListAdapter());
+                mBinding.lvExcel.setAdapter(mAdapter);
                 workbook.close();
             }
         }
@@ -281,13 +319,16 @@ public class ExcelActivity extends BaseActivity {
                 convertView = LayoutInflater.from(ExcelActivity.this).inflate(R.layout.item_item_row, null);
                 binding = DataBindingUtil.bind(convertView);
                 convertView.setTag(binding);
+                binding.tvCheck.setTag(position);
             } else {
                 binding = (ItemItemRowBinding) convertView.getTag();
             }
 
-            binding.machineNo.setText(mExcelList.get(position).getA());
-            binding.modelNm.setText(mExcelList.get(position).getB());
-            binding.serialNo.setText(mExcelList.get(position).getC());
+            binding.machineNo.setText(mExcelList.get(position).getEqNo());
+            binding.modelNm.setText(mExcelList.get(position).getModelNm());
+            binding.serialNo.setText(mExcelList.get(position).getSerialNo());
+            binding.tvCheck.setText(mExcelList.get(position).getIsExist());
+
             return binding.getRoot();
         }
     }

@@ -1,40 +1,40 @@
 package com.lotterental.generalrental.item;
 
 public class ExcelListItem {
-    private boolean isExist;
-    private String a;
-    private String b;
-    private String c;
+    private String mIsExist;
+    private String mEqNo;
+    private String mModelNm;
+    private String mSerialNo;
 
-    public boolean isExist() {
-        return isExist;
+    public String getIsExist() {
+        return mIsExist;
     }
 
-    public void setExist(boolean exist) {
-        isExist = exist;
+    public void setIsExist(String isExist) {
+        this.mIsExist = isExist;
     }
 
-    public String getA() {
-        return a;
+    public String getEqNo() {
+        return mEqNo;
     }
 
-    public void setA(String a) {
-        this.a = a;
+    public void setEqNo(String eqNo) {
+        this.mEqNo = eqNo;
     }
 
-    public String getB() {
-        return b;
+    public String getModelNm() {
+        return mModelNm;
     }
 
-    public void setB(String b) {
-        this.b = b;
+    public void setModelNm(String modelNm) {
+        this.mModelNm = modelNm;
     }
 
-    public String getC() {
-        return c;
+    public String getSerialNo() {
+        return mSerialNo;
     }
 
-    public void setC(String c) {
-        this.c = c;
+    public void setSerialNo(String serialNo) {
+        this.mSerialNo = serialNo;
     }
 }

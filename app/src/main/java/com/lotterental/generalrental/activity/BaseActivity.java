@@ -176,7 +176,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mWebView != null) {
-            if (mWebView.getUrl().contains("login/loginMain") || !mWebView.canGoBack()) {
+            if (mWebView.getUrl().contains("login/loginMain") || mWebView.getUrl().contains("login/loginMain") || !mWebView.canGoBack()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("앱을 종료 하시겠습니까?");
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {

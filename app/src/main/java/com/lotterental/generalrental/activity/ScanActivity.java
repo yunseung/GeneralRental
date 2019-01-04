@@ -138,18 +138,7 @@ public class ScanActivity extends BaseActivity {
     private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
-            boolean isExist = false;
-
-            for (BarcodeListItem elements : mListViewItemList) {
-                if (elements.getBarcode().equals(result.getText())) {
-                    isExist = true;
-                }
-            }
-
-            if (!isExist) {
-                mListViewItemList.add(0, new BarcodeListItem(Integer.toString(mListViewItemList.size() + 1), result.getText()));
-                mAdapter.notifyDataSetChanged();
-            }
+            dataSetCheck(result.getText());
         }
 
         @Override
@@ -157,6 +146,27 @@ public class ScanActivity extends BaseActivity {
             return;
         }
     };
+
+    private void dataSetCheck(String barcode) {
+        boolean isExist = false;
+
+        for (BarcodeListItem elements : mListViewItemList) {
+            if (elements.getBarcode().equals(barcode)) {
+                isExist = true;
+            }
+        }
+
+        if (!isExist) {
+            mListViewItemList.add(0, new BarcodeListItem(Integer.toString(mListViewItemList.size() + 1), barcode));
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void handleMassageBarcode(String barcode) {
+        super.handleMassageBarcode(barcode);
+        dataSetCheck(barcode);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

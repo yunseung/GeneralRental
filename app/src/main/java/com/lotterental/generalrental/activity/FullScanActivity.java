@@ -1,5 +1,6 @@
 package com.lotterental.generalrental.activity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -19,14 +20,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 
-public class FullScanActivity extends AppCompatActivity {
+public class FullScanActivity extends BaseActivity {
     private ActivityFullScanBinding mBinding = null;
-//    private ZXingScannerView mZXingScannerView = null;
 
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
 
-    private String mCallback = null;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class FullScanActivity extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
 
-        mCallback = getIntent().getStringExtra(JavaScriptBridge.CALLBACK);
 
         LPermission.getInstance().checkCameraPermission(this, new LPermission.PermissionGrantedListener() {
             @Override
@@ -88,5 +86,14 @@ public class FullScanActivity extends AppCompatActivity {
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);
         capture.decode();
+    }
+
+    @Override
+    protected void handleMassageBarcode(String barcode) {
+        super.handleMassageBarcode(barcode);
+        Intent i = new Intent();
+        i.putExtra("READER_BARCODE", barcode);
+        setResult(RESULT_OK, i);
+        finish();
     }
 }

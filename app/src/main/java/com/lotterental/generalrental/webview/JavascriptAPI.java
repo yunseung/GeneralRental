@@ -63,7 +63,7 @@ public class JavascriptAPI extends JSBridge {
         }
     }
 
-    @JSApi(invokeMethod = "startPrintSocket", explain = "웹뷰에서 받은 바코드 데이터를 프린터 서버로 소켓 전송", param = {""})
+    @JSApi(invokeMethod = "onStartPrintSocket", explain = "웹뷰에서 받은 바코드 데이터를 프린터 서버로 소켓 전송", param = {""})
     public void onStartPrintScoket(WebView webView, Context context, JSONObject json) throws JSONException {
         if (context instanceof  MainActivity) {
             ((MainActivity) context).startPrintSocket(json.getJSONObject(JavaScriptBridge.PARAM), json.getString(JavaScriptBridge.CALLBACK));
@@ -81,6 +81,13 @@ public class JavascriptAPI extends JSBridge {
     public void reqAppInfo(WebView webView, Context context, JSONObject json) throws JSONException {
         if (context instanceof  MainActivity) {
             ((MainActivity) context).reqAppInfo(json.getString(JavaScriptBridge.CALLBACK));
+        }
+    }
+
+    @JSApi(invokeMethod = "reqExcelDownload", explain = "device unique id, fcm token, app version 전달.", param = {""})
+    public void reqExcelDownload(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof  MainActivity) {
+            ((MainActivity) context).reqExcelDownload(json.getJSONObject(JavaScriptBridge.PARAM), json.getString(JavaScriptBridge.CALLBACK));
         }
     }
 }

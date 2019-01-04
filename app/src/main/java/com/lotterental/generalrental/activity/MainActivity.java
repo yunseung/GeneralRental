@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
@@ -29,8 +30,22 @@ import com.lotterental.generalrental.util.preferences.LPreferences;
 import com.lotterental.generalrental.webview.JavascriptAPI;
 import com.lotterental.generalrental.webview.JavascriptSender;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding mBinding = null;
@@ -138,6 +153,51 @@ public class MainActivity extends BaseActivity {
         JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, jsonParam);
     }
 
+    public void reqExcelDownload(JSONObject obj, String callback) {
+        try {
+            JSONArray array = obj.getJSONArray("LIST");
+            String fileName = obj.getString("FILE_NM");
+
+            File sd = Environment.getExternalStorageDirectory();
+
+            File directory = new File(sd.getAbsolutePath());
+
+            if (!directory.isDirectory()) {
+                directory.mkdirs();
+            }
+
+            try {
+                File file = new File(directory, fileName);
+                WorkbookSettings workbookSettings = new WorkbookSettings();
+                workbookSettings.setLocale(new Locale(Locale.KOREAN.getLanguage(), Locale.KOREAN.getCountry()));
+
+                WritableWorkbook writableWorkbook = Workbook.createWorkbook(file, workbookSettings);
+
+                WritableSheet sheetA = writableWorkbook.createSheet("sheet A", 0);
+
+                int rowCnt = array.length();
+
+                for (int i = 0; i < rowCnt; i++) {
+                    sheetA.addCell(new Label(0, i, ((JSONObject)array.get(i)).getString("INDEX")));
+                    sheetA.addCell(new Label(1, i, ((JSONObject)array.get(i)).getString("EQUNR")));
+                }
+
+                writableWorkbook.write();
+                writableWorkbook.close();
+
+                Toast.makeText(getApplicationContext(), "엑셀 내보내기 완료", Toast.LENGTH_SHORT).show();
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, "succ");
+            } catch (IOException | WriteException e) {
+                Common.printException(e);
+                Toast.makeText(getApplicationContext(), "엑셀 내보내기 실패", Toast.LENGTH_SHORT).show();
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, "fail");
+            }
+        } catch (JSONException e) {
+            Common.printException(e);
+        }
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -146,9 +206,13 @@ public class MainActivity extends BaseActivity {
         switch (requestCode) {
             case IntentIntegrator.REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-                    String re = scanResult.getContents();
-                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, re);
+                    if (data.hasExtra("READER_BARCODE")) {
+                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra("READER_BARCODE"));
+                    } else {
+                        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                        String re = scanResult.getContents();
+                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, re);
+                    }
                 }
                 break;
             case Const.REQ_SCAN_PROCESS:
