@@ -5,13 +5,11 @@ import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
-import com.lotterental.common.jsbridge.JavaScriptBridge;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityFullScanBinding;
 import com.lotterental.generalrental.util.LPermission;
@@ -89,11 +87,12 @@ public class FullScanActivity extends BaseActivity {
     }
 
     @Override
-    protected void handleMassageBarcode(String barcode) {
-        super.handleMassageBarcode(barcode);
+    protected void barcodeReceiver(String barcode) {
+        super.barcodeReceiver(barcode);
         Intent i = new Intent();
         i.putExtra("READER_BARCODE", barcode);
         setResult(RESULT_OK, i);
         finish();
     }
+
 }

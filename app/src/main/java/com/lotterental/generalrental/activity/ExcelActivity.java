@@ -2,6 +2,7 @@ package com.lotterental.generalrental.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
@@ -33,7 +35,6 @@ import com.lotterental.generalrental.util.LPermission;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,6 +94,18 @@ public class ExcelActivity extends BaseActivity {
         });
 
         mAdapter = new ExcelListAdapter();
+
+        mBinding.lvExcel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -116,6 +129,12 @@ public class ExcelActivity extends BaseActivity {
             capture.onDestroy();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+    }
+
     private void startScan(Bundle savedInstanceState) {
         barcodeScannerView = mBinding.viewBarcodeScan;
         Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39);
@@ -124,6 +143,12 @@ public class ExcelActivity extends BaseActivity {
         barcodeScannerView.decodeContinuous(mBarcodeCallback);
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);
+    }
+
+    @Override
+    protected void barcodeReceiver(String barcode) {
+        super.barcodeReceiver(barcode);
+        dataSetCheck(barcode);
     }
 
     private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
@@ -139,19 +164,25 @@ public class ExcelActivity extends BaseActivity {
         }
     };
 
-    @Override
-    protected void handleMassageBarcode(String barcode) {
-        super.handleMassageBarcode(barcode);
-        dataSetCheck(barcode);
-    }
-
     private void dataSetCheck(String barcode) {
+        mBinding.lvExcel.requestFocusFromTouch();
         // 스캔 결과가 excel list 에 있는 eqNo 와 같은게 있다면 체크한다.
         for (int i = 0; i < mExcelList.size(); i++) {
             if ((mExcelList.get(i).getEqNo()).equals(barcode)) {
                 mExcelList.get(i).setIsExist("완료");
+                mBinding.lvExcel.setSelection(i);
             }
         }
+
+        int scanCnt = 0;
+        for (ExcelListItem item : mExcelList) {
+            if (item.getIsExist() != null) {
+                scanCnt++;
+            }
+        }
+
+        mBinding.tvScanCnt.setText(Integer.toString(scanCnt));
+
         mAdapter.notifyDataSetChanged();
     }
 
@@ -283,6 +314,7 @@ public class ExcelActivity extends BaseActivity {
             } catch (IOException | BiffException e) {
                 Common.printException(e);
             } finally {
+                mBinding.tvAssetCnt.setText(Integer.toString(mExcelList.size()));
                 mBinding.lvExcel.setAdapter(mAdapter);
                 workbook.close();
             }

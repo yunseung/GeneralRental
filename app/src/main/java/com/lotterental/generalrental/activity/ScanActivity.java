@@ -19,6 +19,7 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
+import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
 import com.lotterental.generalrental.R;
@@ -40,12 +41,14 @@ import java.util.List;
 public class ScanActivity extends BaseActivity {
     private ActivityScanBinding mBinding = null;
 
-    private ArrayList<BarcodeListItem> mListViewItemList = new ArrayList<BarcodeListItem>();
+    private ArrayList<String> mListViewItemList = new ArrayList<>();
     private BarcodeDataAdapter mAdapter = null;
 
     private String mReqNo = null;
     private String mVbeln = null;
     private String mZinout = null;
+
+    private int mLimitCnt = 0;
 
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
@@ -64,19 +67,24 @@ public class ScanActivity extends BaseActivity {
         if (getIntent().getStringExtra(JavaScriptBridge.PARAM) != null) {
             try {
                 JSONObject obj = new JSONObject(getIntent().getStringExtra(JavaScriptBridge.PARAM));
-
-                mBinding.tvTotal.setText(obj.getString("TITLE"));
+                mBinding.tvTitle.setText(obj.getString("TITLE"));
                 mBinding.tvTotalNum.setText(obj.getString("TOTALCT"));
-                mReqNo = obj.getString("REQNO");
-                mVbeln = obj.getString("VBELN");
-                mZinout = obj.getString("ZINOUT");
+                mLimitCnt = Integer.parseInt(obj.getString("TOTALCT"));
+
+                if (obj.getString("TITLE").equals("자산대수")) {
+                    mReqNo = obj.getString("REQNO");
+                    mVbeln = obj.getString("VBELN");
+                    mZinout = obj.getString("ZINOUT");
+                } else {
+                    mReqNo = obj.getString("MATNR");
+                    mVbeln = obj.getString("VBELN");
+                    mZinout = obj.getString("KUNNR");
+                }
 
                 JSONArray list = obj.getJSONArray("LIST");
                 for (int i = 0; i < list.length(); i++) {
-                    mListViewItemList.add(new BarcodeListItem(Integer.toString(i + 1), ((JSONObject) list.get(i)).getString("SERGE")));
+                    mListViewItemList.add(((JSONObject) list.get(i)).getString("SERGE"));
                 }
-
-                Collections.reverse(mListViewItemList);
 
                 mAdapter = new BarcodeDataAdapter(this);
                 mBinding.listViewBarcode.setAdapter(mAdapter);
@@ -85,25 +93,45 @@ public class ScanActivity extends BaseActivity {
             }
         }
 
+        mBinding.btCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         mBinding.btBarcodeListSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     JSONObject jsonParameter = new JSONObject();
-
-                    jsonParameter.put("VBELN", mVbeln);
-                    jsonParameter.put("ZINOUT", mZinout);
-                    jsonParameter.put("REQNO", mReqNo);
-
                     ArrayList<JSONObject> list = new ArrayList<>();
+                    if (mBinding.tvTitle.getText().equals("자산대수")) {
+                        jsonParameter.put("VBELN", mVbeln);
+                        jsonParameter.put("ZINOUT", mZinout);
+                        jsonParameter.put("REQNO", mReqNo);
 
-                    for (int i = 0; i < mListViewItemList.size(); i++) {
-                        JSONObject jsonSerge = new JSONObject();
-                        jsonSerge.put("VBELN", mVbeln);
-                        jsonSerge.put("ZINOUT", mZinout);
-                        jsonSerge.put("SERGE", mListViewItemList.get(i).getBarcode());
-                        jsonSerge.put("REQNO", mReqNo);
-                        list.add(jsonSerge);
+                        for (int i = 0; i < mListViewItemList.size(); i++) {
+                            JSONObject jsonSerge = new JSONObject();
+                            jsonSerge.put("VBELN", mVbeln);
+                            jsonSerge.put("ZINOUT", mZinout);
+                            jsonSerge.put("SERGE", mListViewItemList.get(i));
+                            jsonSerge.put("REQNO", mReqNo);
+                            list.add(jsonSerge);
+                        }
+                    } else {
+                        jsonParameter.put("VBELN", mVbeln);
+                        jsonParameter.put("KUNNR", mZinout);
+                        jsonParameter.put("MATNR", mReqNo);
+
+                        for (int i = 0; i < mListViewItemList.size(); i++) {
+                            JSONObject jsonSerge = new JSONObject();
+                            jsonSerge.put("VBELN", mVbeln);
+                            jsonSerge.put("KUNNR", mZinout);
+                            jsonSerge.put("SERGE", mListViewItemList.get(i));
+                            jsonSerge.put("MATNR", mReqNo);
+                            list.add(jsonSerge);
+                        }
                     }
 
                     jsonParameter.put("IT_DATA", new JSONArray(list));
@@ -135,6 +163,12 @@ public class ScanActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void barcodeReceiver(String barcode) {
+        super.barcodeReceiver(barcode);
+        dataSetCheck(barcode);
+    }
+
     private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
@@ -148,24 +182,24 @@ public class ScanActivity extends BaseActivity {
     };
 
     private void dataSetCheck(String barcode) {
+        if (mLimitCnt > 0 && mListViewItemList.size() >= mLimitCnt) {
+            return;
+        }
+
         boolean isExist = false;
 
-        for (BarcodeListItem elements : mListViewItemList) {
-            if (elements.getBarcode().equals(barcode)) {
+        for (String elements : mListViewItemList) {
+            if (elements.equals(barcode)) {
                 isExist = true;
             }
         }
 
         if (!isExist) {
-            mListViewItemList.add(0, new BarcodeListItem(Integer.toString(mListViewItemList.size() + 1), barcode));
+            mListViewItemList.add(0, barcode);
             mAdapter.notifyDataSetChanged();
         }
-    }
 
-    @Override
-    protected void handleMassageBarcode(String barcode) {
-        super.handleMassageBarcode(barcode);
-        dataSetCheck(barcode);
+        mBinding.tvScanNum.setText(Integer.toString(mListViewItemList.size()));
     }
 
     @Override
@@ -205,13 +239,10 @@ public class ScanActivity extends BaseActivity {
         capture.initializeFromIntent(getIntent(), savedInstanceState);
     }
 
-
     @Override
     public void onBackPressed() {
         finish();
     }
-
-
 
     private class BarcodeDataAdapter extends BaseAdapter {
         private Context mContext = null;
@@ -242,12 +273,22 @@ public class ScanActivity extends BaseActivity {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_scanner_code, null);
                 scannerCodeBinding = DataBindingUtil.bind(convertView);
                 convertView.setTag(scannerCodeBinding);
+                scannerCodeBinding.btRemove.setTag(position);
             } else {
                 scannerCodeBinding = (ItemScannerCodeBinding) convertView.getTag();
+                scannerCodeBinding.btRemove.setTag(position);
             }
 
-            scannerCodeBinding.tvNum.setText(mListViewItemList.get(position).getNum());
-            scannerCodeBinding.tvBarcode.setText(mListViewItemList.get(position).getBarcode());
+            scannerCodeBinding.tvNum.setText(Integer.toString(position + 1));
+            scannerCodeBinding.tvBarcode.setText(mListViewItemList.get(position));
+            scannerCodeBinding.btRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, mListViewItemList.get((int)v.getTag()) + " 가 삭제되었습니다,", Toast.LENGTH_SHORT).show();
+                    mListViewItemList.remove((int)v.getTag());
+                    notifyDataSetChanged();
+                }
+            });
             return scannerCodeBinding.getRoot();
         }
     }

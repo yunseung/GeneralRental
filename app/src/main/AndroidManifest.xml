@@ -43,7 +43,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ExcelActivity">
+        <activity android:name=".activity.TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.ExcelActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>

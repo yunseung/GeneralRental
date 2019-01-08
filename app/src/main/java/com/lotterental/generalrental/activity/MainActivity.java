@@ -36,8 +36,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import jxl.Workbook;
@@ -78,9 +76,15 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void handleMassageBarcode(String barcode) {
-        super.handleMassageBarcode(barcode);
-        JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", barcode);
+    protected void onDestroy() {
+        LPreferences.setIsConnected(getApplicationContext(), false);
+        disconnect();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void disconnect() {
+        super.disconnect();
     }
 
     /**
@@ -114,6 +118,7 @@ public class MainActivity extends BaseActivity {
     public void startFullScanActivity(String callback) {
         mCallback = callback;
         IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setBeepEnabled(false);
         integrator.setCaptureActivity(FullScanActivity.class);
         integrator.setOrientationLocked(false);
         integrator.initiateScan();
@@ -198,6 +203,12 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void barcodeReceiver(String barcode) {
+        super.barcodeReceiver(barcode);
+
+        JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", barcode);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -211,15 +222,13 @@ public class MainActivity extends BaseActivity {
                     } else {
                         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
                         String re = scanResult.getContents();
-                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, re);
+                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra(JavaScriptBridge.PARAM));
                     }
                 }
                 break;
             case Const.REQ_SCAN_PROCESS:
                 if (resultCode == RESULT_OK) {
-                    LLog.e(data.getStringExtra(JavaScriptBridge.CALLBACK));
-                    LLog.e(data.getStringExtra(JavaScriptBridge.PARAM));
-                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, data.getStringExtra(JavaScriptBridge.CALLBACK), data.getStringExtra(JavaScriptBridge.PARAM));
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra(JavaScriptBridge.PARAM));
                 }
                 break;
 

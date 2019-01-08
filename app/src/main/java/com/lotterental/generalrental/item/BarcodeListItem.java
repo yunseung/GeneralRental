@@ -8,18 +8,13 @@ import android.graphics.drawable.Drawable;
 
 public class BarcodeListItem {
     private String barcode ;
-    private String num ;
 
-    public BarcodeListItem(String num, String barcode) {
+    public BarcodeListItem(String barcode) {
         this.barcode = barcode;
-        this.num = num;
     }
 
     public String getBarcode() {
         return this.barcode ;
-    }
-    public String getNum() {
-        return this.num ;
     }
 }
 

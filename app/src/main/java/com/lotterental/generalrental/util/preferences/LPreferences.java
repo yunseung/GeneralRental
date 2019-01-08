@@ -14,6 +14,7 @@ public class LPreferences {
     private static final String UUID = "UUID"; //앱 처음시작
     private static final String APP_FIRST_LAUNCH = "APP_FIRST_LAUNCH";
     private static final String TOKEN = "TOKEN";
+    private static final String IS_CONNECTED = "IS_CONNECTED";
 
     public static final String PREF_NAME = "ibkc_ods.pref";
 
@@ -70,5 +71,15 @@ public class LPreferences {
     public static void setUUID(Context context, String data) {
         assert context != null;
         setString(context, UUID, data);
+    }
+
+    public static void setIsConnected(Context context, boolean isConnected) {
+        assert context != null;
+        setBoolean(context, IS_CONNECTED, isConnected);
+    }
+
+    public static boolean getIsConnected(Context context) {
+        assert context != null;
+        return getBoolean(context, IS_CONNECTED, false);
     }
 }
