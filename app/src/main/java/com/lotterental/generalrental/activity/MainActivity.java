@@ -1,5 +1,7 @@
 package com.lotterental.generalrental.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -96,6 +98,8 @@ public class MainActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearHistory();
         mWebView.loadUrl(BuildConfig.WEB_URL);
+
+        LLog.e("TOKEN IS : " + LPreferences.getToken(this));
     }
 
     public void startScanActivity(JSONObject obj, String callback) {
@@ -203,6 +207,52 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    public void needUpdate(JSONObject param) {
+        try {
+            if (param.getString("IS_NECESSARY").equals("Y")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("업데이트 후 사용 가능합니다.");
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.APP_DOWNLOAD_URL));
+                        startActivity(browserIntent);
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                builder.create();
+                builder.show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("새로운 버전이 있습니다. 업데이트 하시겠습니까?");
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.APP_DOWNLOAD_URL));
+                        startActivity(browserIntent);
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.create();
+                builder.show();
+            }
+        } catch (JSONException e) {
+            Common.printException(e);
+        }
+    }
+
     @Override
     protected void barcodeReceiver(String barcode) {
         super.barcodeReceiver(barcode);
@@ -222,7 +272,7 @@ public class MainActivity extends BaseActivity {
                     } else {
                         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
                         String re = scanResult.getContents();
-                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra(JavaScriptBridge.PARAM));
+                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, re);
                     }
                 }
                 break;

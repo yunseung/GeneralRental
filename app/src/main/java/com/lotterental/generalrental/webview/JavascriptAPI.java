@@ -84,10 +84,17 @@ public class JavascriptAPI extends JSBridge {
         }
     }
 
-    @JSApi(invokeMethod = "reqExcelDownload", explain = "device unique id, fcm token, app version 전달.", param = {""})
+    @JSApi(invokeMethod = "reqExcelDownload", explain = "엑셀 다운로드.", param = {""})
     public void reqExcelDownload(WebView webView, Context context, JSONObject json) throws JSONException {
         if (context instanceof  MainActivity) {
             ((MainActivity) context).reqExcelDownload(json.getJSONObject(JavaScriptBridge.PARAM), json.getString(JavaScriptBridge.CALLBACK));
+        }
+    }
+
+    @JSApi(invokeMethod = "onNeedUpdate", explain = "버전 정보 비교하여 업데이트 필요 여부 받음..", param = {""})
+    public void needUpdate(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof  MainActivity) {
+            ((MainActivity) context).needUpdate(json.getJSONObject(JavaScriptBridge.PARAM));
         }
     }
 }
