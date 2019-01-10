@@ -30,6 +30,7 @@ import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityExcelBinding;
 import com.lotterental.generalrental.databinding.ItemItemRowBinding;
 import com.lotterental.generalrental.item.ExcelListItem;
+import com.lotterental.generalrental.product.ChatServiceInit;
 import com.lotterental.generalrental.util.LPermission;
 
 import java.io.File;
@@ -101,6 +102,8 @@ public class ExcelActivity extends BaseActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
+
+
     }
 
     @Override
@@ -111,6 +114,12 @@ public class ExcelActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
+            @Override
+            public void barcodeCallback(String barcode) {
+                dataSetCheck(barcode);
+            }
+        });
         if (capture != null)
             capture.onResume();
     }
@@ -143,12 +152,6 @@ public class ExcelActivity extends BaseActivity {
         barcodeScannerView.decodeContinuous(mBarcodeCallback);
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);
-    }
-
-    @Override
-    protected void barcodeReceiver(String barcode) {
-        super.barcodeReceiver(barcode);
-        dataSetCheck(barcode);
     }
 
     private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {

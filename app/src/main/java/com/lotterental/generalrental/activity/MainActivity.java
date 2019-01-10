@@ -1,6 +1,7 @@
 package com.lotterental.generalrental.activity;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -12,8 +13,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -27,6 +31,7 @@ import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityMainBinding;
 import com.lotterental.generalrental.network.PrinterSocketAsyncTask;
+import com.lotterental.generalrental.product.ChatServiceInit;
 import com.lotterental.generalrental.util.LPermission;
 import com.lotterental.generalrental.util.preferences.LPreferences;
 import com.lotterental.generalrental.webview.JavascriptAPI;
@@ -50,6 +55,7 @@ import jxl.write.WriteException;
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding mBinding = null;
     private String mCallback = null;
+    private BluetoothAdapter mBluetoothAdapter = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,19 +80,33 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         initializeElements();
     }
 
     @Override
-    protected void onDestroy() {
-        LPreferences.setIsConnected(getApplicationContext(), false);
-        disconnect();
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (mBluetoothAdapter.isEnabled()) {
+            setChatServiceListener();
+        } else {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, Const.BT_REQUEST_ENABLE);
+        }
+
     }
 
     @Override
-    protected void disconnect() {
-        super.disconnect();
+    protected void onDestroy() {
+        ChatServiceInit.getInstance(getApplication()).disconnect();
+        ChatServiceInit.getInstance(getApplication()).killInstance();
+        super.onDestroy();
     }
 
     /**
@@ -100,6 +120,15 @@ public class MainActivity extends BaseActivity {
         mWebView.loadUrl(BuildConfig.WEB_URL);
 
         LLog.e("TOKEN IS : " + LPreferences.getToken(this));
+    }
+
+    private void setChatServiceListener() {
+        ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
+            @Override
+            public void barcodeCallback(String barcode) {
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", barcode);
+            }
+        });
     }
 
     public void startScanActivity(JSONObject obj, String callback) {
@@ -254,13 +283,6 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void barcodeReceiver(String barcode) {
-        super.barcodeReceiver(barcode);
-
-        JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", barcode);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -282,18 +304,24 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
 
+            case Const.BT_REQUEST_ENABLE:
+                setChatServiceListener();
+                break;
             default:
                 break;
         }
     }
 
+    /**
+     * TEST ///////////////////////////////////////////////////////////////////////////////////////
+     */
 
     public void onScanClick(View v) {
-//        startActivity(new Intent(MainActivity.this, ScanActivity.class));
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setCaptureActivity(ScanActivity.class);
-        integrator.setOrientationLocked(false);
-        integrator.initiateScan();
+        startActivity(new Intent(MainActivity.this, ScanActivity.class));
+//        IntentIntegrator integrator = new IntentIntegrator(this);
+//        integrator.setCaptureActivity(ScanActivity.class);
+//        integrator.setOrientationLocked(false);
+//        integrator.initiateScan();
     }
 
     public void onExcelClick(View v) {
@@ -301,7 +329,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onPrintClick(View v) {
-//        startActivity(new Intent(MainActivity.this, ScanActivity.class));
-        LLog.e("TOKEN IS : " + LPreferences.getToken(this));
+        startActivity(new Intent(MainActivity.this, FullScanActivity.class));
     }
 }

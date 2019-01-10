@@ -10,8 +10,10 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
+import com.lotterental.LLog;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityFullScanBinding;
+import com.lotterental.generalrental.product.ChatServiceInit;
 import com.lotterental.generalrental.util.LPermission;
 
 import java.util.Arrays;
@@ -53,6 +55,17 @@ public class FullScanActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
+            @Override
+            public void barcodeCallback(String barcode) {
+                Intent i = new Intent();
+                i.putExtra("READER_BARCODE", barcode);
+                setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+
         if (capture != null)
             capture.onResume();
     }
@@ -84,15 +97,6 @@ public class FullScanActivity extends BaseActivity {
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);
         capture.decode();
-    }
-
-    @Override
-    protected void barcodeReceiver(String barcode) {
-        super.barcodeReceiver(barcode);
-        Intent i = new Intent();
-        i.putExtra("READER_BARCODE", barcode);
-        setResult(RESULT_OK, i);
-        finish();
     }
 
 }

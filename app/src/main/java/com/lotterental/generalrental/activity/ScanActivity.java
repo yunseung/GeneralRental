@@ -26,6 +26,7 @@ import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityScanBinding;
 import com.lotterental.generalrental.databinding.ItemScannerCodeBinding;
 import com.lotterental.generalrental.item.BarcodeListItem;
+import com.lotterental.generalrental.product.ChatServiceInit;
 import com.lotterental.generalrental.util.LPermission;
 
 import org.json.JSONArray;
@@ -160,13 +161,19 @@ public class ScanActivity extends BaseActivity {
             }
         });
 
-
     }
 
     @Override
-    protected void barcodeReceiver(String barcode) {
-        super.barcodeReceiver(barcode);
-        dataSetCheck(barcode);
+    protected void onResume() {
+        super.onResume();
+        ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
+            @Override
+            public void barcodeCallback(String barcode) {
+                dataSetCheck(barcode);
+            }
+        });
+        if (capture != null)
+            capture.onResume();
     }
 
     private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
@@ -206,13 +213,6 @@ public class ScanActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         capture.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (capture != null)
-            capture.onResume();
     }
 
     @Override
