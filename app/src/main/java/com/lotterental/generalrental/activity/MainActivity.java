@@ -1,5 +1,6 @@
 package com.lotterental.generalrental.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
@@ -13,10 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -99,7 +97,6 @@ public class MainActivity extends BaseActivity {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, Const.BT_REQUEST_ENABLE);
         }
-
     }
 
     @Override
@@ -118,8 +115,6 @@ public class MainActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearHistory();
         mWebView.loadUrl(BuildConfig.WEB_URL);
-
-        LLog.e("TOKEN IS : " + LPreferences.getToken(this));
     }
 
     private void setChatServiceListener() {
@@ -174,7 +169,6 @@ public class MainActivity extends BaseActivity {
         } catch (JSONException | SecurityException e) {
             Common.printException(e);
         }
-
     }
 
     public void reqAppInfo(String callback) {
@@ -187,7 +181,6 @@ public class MainActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException | JSONException e) {
             Common.printException(e);
         }
-
         JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, jsonParam);
     }
 
@@ -305,30 +298,18 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case Const.BT_REQUEST_ENABLE:
-                setChatServiceListener();
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    // Bluetooth is now enabled, so set up a chat session
+                    setChatServiceListener();
+                } else {
+                    // User did not enable Bluetooth or an error occurred
+                    LLog.d("BT not enabled");
+                    Toast.makeText(this, "단말기의 블루투스를 활성화 해주세요", Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 break;
         }
-    }
-
-    /**
-     * TEST ///////////////////////////////////////////////////////////////////////////////////////
-     */
-
-    public void onScanClick(View v) {
-        startActivity(new Intent(MainActivity.this, ScanActivity.class));
-//        IntentIntegrator integrator = new IntentIntegrator(this);
-//        integrator.setCaptureActivity(ScanActivity.class);
-//        integrator.setOrientationLocked(false);
-//        integrator.initiateScan();
-    }
-
-    public void onExcelClick(View v) {
-        startActivity(new Intent(MainActivity.this, ExcelActivity.class));
-    }
-
-    public void onPrintClick(View v) {
-        startActivity(new Intent(MainActivity.this, FullScanActivity.class));
     }
 }

@@ -39,13 +39,15 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
         String cmdCode;
         JSONArray list;
         try {
-            host = jsonObjects[0].getString("PRINT_IP");
-            port = jsonObjects[0].getInt("PORT");
+            host = "10.106.13.150";
+            port = 60006;
+//            host = jsonObjects[0].getString("PRINT_IP");
+//            port = jsonObjects[0].getInt("PORT");
             cmdCode = jsonObjects[0].getString("CMD_CODE");
             deviceId = jsonObjects[0].getString("DEVICE_ID");
             list = jsonObjects[0].getJSONArray("list");
             if (deviceId.length() < 12) {
-                for (int i = deviceId.length(); i <= 12; i++) {
+                for (int i = deviceId.length(); i < 12; i++) {
                     deviceId = new StringBuffer(deviceId).append("0").toString();
                 }
             }
@@ -75,7 +77,7 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
 
                     // TODO IP 설정 callback, sharedPreferences 저장..????
                     for (int i = 0; i < list.length(); i++) {
-                        bos2.write(list.getJSONObject(i).getString("ASSET_NO").getBytes("UTF-8"));
+                        bos2.write(list.getJSONObject(i).getString("ASSETS_NO").getBytes("UTF-8"));
                         bos2.write(0x11);
                         bos2.write(list.getJSONObject(i).getString("SERIAL_NO").getBytes("UTF-8"));
                         bos2.write(0x11);
@@ -88,9 +90,11 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
 
                     byte[] data = bos2.toByteArray();
 
+                    LLog.e(deviceId + "____++++");
+
                     bos1.write(intToByteArray(data.length + 25));
-                    bos1.write("ninebytes".getBytes("UTF-8"));
-                    bos1.write("twelvebytess".getBytes("UTF-8"));
+                    bos1.write("androidpk".getBytes("UTF-8"));
+                    bos1.write(deviceId.getBytes("UTF-8"));
                     bos1.write(data);
                 } catch (IOException | JSONException e) {
                     Common.printException(e);

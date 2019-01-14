@@ -10,7 +10,6 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
-import com.lotterental.LLog;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityFullScanBinding;
 import com.lotterental.generalrental.product.ChatServiceInit;
