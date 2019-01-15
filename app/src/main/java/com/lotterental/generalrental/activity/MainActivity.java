@@ -282,12 +282,11 @@ public class MainActivity extends BaseActivity {
         switch (requestCode) {
             case IntentIntegrator.REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    if (data.hasExtra("READER_BARCODE")) {
+                    // if (full scan 에서 온 결과 (단건)) else (다건 스캔 결과)
+                    if (data.hasExtra("FULL_SCAN_BARCODE")) {
                         JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra("READER_BARCODE"));
                     } else {
-                        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-                        String re = scanResult.getContents();
-                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, re);
+                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra(JavaScriptBridge.PARAM));
                     }
                 }
                 break;

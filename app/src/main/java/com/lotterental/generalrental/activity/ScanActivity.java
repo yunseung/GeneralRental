@@ -19,13 +19,11 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
-import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityScanBinding;
 import com.lotterental.generalrental.databinding.ItemScannerCodeBinding;
-import com.lotterental.generalrental.item.BarcodeListItem;
 import com.lotterental.generalrental.product.ChatServiceInit;
 import com.lotterental.generalrental.util.LPermission;
 
@@ -36,7 +34,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class ScanActivity extends BaseActivity {

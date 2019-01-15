@@ -59,7 +59,7 @@ public class FullScanActivity extends BaseActivity {
             @Override
             public void barcodeCallback(String barcode) {
                 Intent i = new Intent();
-                i.putExtra("READER_BARCODE", barcode);
+                i.putExtra("FULL_SCAN_BARCODE", barcode);
                 setResult(RESULT_OK, i);
                 finish();
             }

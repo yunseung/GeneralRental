@@ -39,8 +39,6 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
         String cmdCode;
         JSONArray list;
         try {
-//            host = "10.106.13.150";
-//            port = 60006;
             host = jsonObjects[0].getString("PRINT_IP");
             port = jsonObjects[0].getInt("PRINT_PORT");
             cmdCode = jsonObjects[0].getString("CMD_CODE");
