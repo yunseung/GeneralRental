@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.common.jsbridge.JavaScriptBridge;
@@ -121,7 +120,13 @@ public class MainActivity extends BaseActivity {
         ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
             @Override
             public void barcodeCallback(String barcode) {
-                JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", barcode);
+                try {
+                    JSONObject param = new JSONObject();
+                    param.put(mCallback, barcode);
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                } catch (JSONException e) {
+                    Common.printException(e);
+                }
             }
         });
     }
@@ -217,11 +222,23 @@ public class MainActivity extends BaseActivity {
                 writableWorkbook.close();
 
                 Toast.makeText(getApplicationContext(), "엑셀 내보내기 완료", Toast.LENGTH_SHORT).show();
-                JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, "succ");
+                try {
+                    JSONObject param = new JSONObject();
+                    param.put(mCallback, "succ");
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                } catch (JSONException e) {
+                    Common.printException(e);
+                }
             } catch (IOException | WriteException e) {
                 Common.printException(e);
                 Toast.makeText(getApplicationContext(), "엑셀 내보내기 실패", Toast.LENGTH_SHORT).show();
-                JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, "fail");
+                try {
+                    JSONObject param = new JSONObject();
+                    param.put(mCallback, "fail");
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                } catch (JSONException e1) {
+                    Common.printException(e1);
+                }
             }
         } catch (JSONException e) {
             Common.printException(e);
@@ -284,7 +301,14 @@ public class MainActivity extends BaseActivity {
                 if (resultCode == RESULT_OK) {
                     // if (full scan 에서 온 결과 (단건)) else (다건 스캔 결과)
                     if (data.hasExtra("FULL_SCAN_BARCODE")) {
-                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra("FULL_SCAN_BARCODE"));
+//                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra("FULL_SCAN_BARCODE"));
+                        try {
+                            JSONObject param = new JSONObject();
+                            param.put(mCallback, data.getStringExtra("FULL_SCAN_BARCODE"));
+                            JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                        } catch (JSONException e) {
+                            Common.printException(e);
+                        }
                     } else {
                         JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra(JavaScriptBridge.PARAM));
                     }

@@ -11,7 +11,6 @@ import com.lotterental.LLog;
  */
 
 public class JavascriptSender {
-    private final String TAG = JavascriptSender.class.getSimpleName();
 
     private JavascriptSender() {
     }

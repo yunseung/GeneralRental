@@ -5,6 +5,7 @@ import android.webkit.WebView;
 
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
+import com.lotterental.generalrental.webview.JavascriptSender;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,9 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
         String deviceId;
         String cmdCode;
         JSONArray list;
+
+        String result;
+
         try {
             host = jsonObjects[0].getString("PRINT_IP");
             port = jsonObjects[0].getInt("PRINT_PORT");
@@ -88,8 +92,6 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
 
                     byte[] data = bos2.toByteArray();
 
-                    LLog.e(deviceId + "____++++");
-
                     bos1.write(intToByteArray(data.length + 25));
                     bos1.write("androidpk".getBytes("UTF-8"));
                     bos1.write(deviceId.getBytes("UTF-8"));
@@ -135,44 +137,49 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
 
             }
 
+            result = new String(bos.toByteArray(), "UTF-8").toLowerCase();
+
             LLog.d("=========================================");
 
             LLog.d("서버로부터 받은 메시지" + new String(bos.toByteArray(), "UTF-8"));
 
             LLog.d("=========================================");
 
+            if (result.contains("ok")) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (IOException e) {
             Common.printException(e);
             return false;
         } finally {
-
             try {
-
                 if (dis != null && socket != null) {
                     LLog.d("연결을 종료합니다.");
-
                     // 스트림과 소켓을 닫는다.
-
                     dis.close();
-
                     socket.close();
-
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
-
             }
-
         }
-
-        return true;
     }
 
     @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+        if (mWebView != null && mCallbackName != null) {
+            try {
+                JSONObject param = new JSONObject();
+                param.put(mCallbackName, result ? "SUCC" : "FAIL");
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallbackName, param);
+            } catch (JSONException e) {
+                Common.printException(e);
+            }
+        }
     }
 
 

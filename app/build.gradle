@@ -43,7 +43,7 @@ android {
             buildConfigField "boolean", "IS_DEV",  "true"
             buildConfigField "String",  "WEB_URL",  "\"http://124.243.70.42:8812/oam/mobile/login/loginMain\""
             buildConfigField "String",  "API_URL", "\"http://124.243.70.42:8812/oam/mobile\""
-            buildConfigField "String", "APP_DOWNLOAD_URL", "\"http://124.243.70.42:8812/oam/mobile\""
+            buildConfigField "String", "APP_DOWNLOAD_URL", "\"http://124.243.70.42:8812/mobile/main \""
         }
     }
 
