@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.ResultPoint;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
@@ -17,6 +20,7 @@ import com.lotterental.generalrental.util.LPermission;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 public class FullScanActivity extends BaseActivity {
@@ -83,6 +87,21 @@ public class FullScanActivity extends BaseActivity {
             capture.onDestroy();
     }
 
+    private BarcodeCallback mBarcodeCallback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            Intent i = new Intent();
+            i.putExtra("FULL_SCAN_BARCODE", result.getText());
+            setResult(RESULT_OK, i);
+            finish();
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+            return;
+        }
+    };
+
     @Override
     public void onBackPressed() {
         finish();
@@ -93,9 +112,9 @@ public class FullScanActivity extends BaseActivity {
         Collection<BarcodeFormat> formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39);
         barcodeScannerView.getBarcodeView().setDecoderFactory(new DefaultDecoderFactory(formats));
         barcodeScannerView.initializeFromIntent(getIntent());
+        barcodeScannerView.decodeSingle(mBarcodeCallback);
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);
-        capture.decode();
     }
 
 }

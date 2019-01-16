@@ -284,7 +284,7 @@ public class MainActivity extends BaseActivity {
                 if (resultCode == RESULT_OK) {
                     // if (full scan 에서 온 결과 (단건)) else (다건 스캔 결과)
                     if (data.hasExtra("FULL_SCAN_BARCODE")) {
-                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra("READER_BARCODE"));
+                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra("FULL_SCAN_BARCODE"));
                     } else {
                         JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, data.getStringExtra(JavaScriptBridge.PARAM));
                     }
