@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.android.databinding.*
+-keep class android.databinding.*
+-keep class * extends android.databinding.ViewDataBinding*
+-keep class * extends com.android.databinding.ViewDataBinding*
+-keep class com.lotterental.generalrental.webview.** { *; }
+-keep class com.lotterental.common.jsbridge.** { *; }
+-keep class com.gun0912.tedpermission.*
+-keepattributes *Annotation*
+-dontwarn org.apache.log4j.**

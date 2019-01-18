@@ -79,6 +79,7 @@ public class JavaScriptBridge {
                             }
                         }
                     }
+                    LLog.e("JavaScriptBridge", json.getString(JavaScriptBridge.API) + " ++++++++++++++");
                     Toast.makeText(mContext, "Not Found appBridge", Toast.LENGTH_LONG).show();
                 } catch (IllegalAccessException e) {
                     Common.printException(e);

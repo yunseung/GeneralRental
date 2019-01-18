@@ -26,18 +26,21 @@ android {
 
         release {
             signingConfig signingConfigs.release    // 빌드 키 이용
-            minifyEnabled false                     // 소스 축소
+            minifyEnabled true                     // 소스 축소
             zipAlignEnabled true                    // 스토어 올리기위한 zip 정렬
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             //하단 부터 Build Variant에서 빌드선택후 빌드 하면 BuildConfig.Java파일에 변수가 생성됨.
             buildConfigField "boolean", "IS_DEV",  "false"
-            buildConfigField "String",  "WEB_URL",  "\"\""
+            buildConfigField "String",  "WEB_URL",  "\"http://124.243.70.27/oam/mobile/login/loginMain\""
             buildConfigField "String",  "API_URL", "\"\""
             buildConfigField "String", "APP_DOWNLOAD_URL", "\"http://124.243.70.42:8812/oam/mobile\""
         }
 
         debug{
             signingConfig signingConfigs.release
+            minifyEnabled false
 
             //하단 부터 Build Variant에서 빌드선택후 빌드 하면 BuildConfig.Java파일에 변수가 생성됨
             buildConfigField "boolean", "IS_DEV",  "true"
@@ -72,7 +75,6 @@ dependencies {
     // 퍼미션 체크
     implementation 'gun0912.ted:tedpermission:2.2.0'
     // barcode qr code
-//    implementation 'me.dm7.barcodescanner:zxing:1.9'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.zxing:core:3.2.1'
     //

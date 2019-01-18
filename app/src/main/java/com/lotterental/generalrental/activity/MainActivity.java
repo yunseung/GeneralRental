@@ -50,6 +50,14 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
 public class MainActivity extends BaseActivity {
+    public static final String ROOT_PATH = Environment.
+            getExternalStorageDirectory() + "";
+    private static final String ROOTING_PATH_1 = "/system/bin/su";
+    private static final String ROOTING_PATH_2 = "/system/xbin/su";
+    private static final String ROOTING_PATH_3 = "/system/app/SuperUser.apk";
+    private static final String ROOTING_PATH_4 = "/data/data/com.noshufou.android.su";
+
+
     private ActivityMainBinding mBinding = null;
     private String mCallback = null;
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -57,6 +65,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            Runtime.getRuntime().exec("su");
+            LLog.d("root", "rooting");
+        } catch ( Exception e) {
+            LLog.d("root", "not rooting");
+        }
 
         mBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
@@ -220,6 +235,7 @@ public class MainActivity extends BaseActivity {
 
                 writableWorkbook.write();
                 writableWorkbook.close();
+
 
                 Toast.makeText(getApplicationContext(), "엑셀 내보내기 완료", Toast.LENGTH_SHORT).show();
                 try {

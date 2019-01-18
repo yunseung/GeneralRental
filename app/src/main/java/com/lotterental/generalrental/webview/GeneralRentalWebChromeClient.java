@@ -4,7 +4,6 @@ import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 
 import com.lotterental.LLog;
-import com.lotterental.generalrental.util.eventbus.WebConsoleErrorEventBus;
 
 /**
  * Created by macpro on 2018. 6. 15..
