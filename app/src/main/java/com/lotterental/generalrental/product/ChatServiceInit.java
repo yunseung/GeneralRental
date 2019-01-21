@@ -32,7 +32,6 @@ public class ChatServiceInit {
 }
 
     private ChatServiceInit() {
-        LLog.e("START!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         mHandler.sendEmptyMessageDelayed(START_SETUP_CHAT, 3000);
     }
 
@@ -96,7 +95,6 @@ public class ChatServiceInit {
         if (listItems.size() > 0) {
             final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
             BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(items[0].toString().substring(items[0].length() - 17));
-            LLog.e("Device : " + device.getName());
             try {
                 mChatService.connect(device);
             } catch (Exception e) {

@@ -18,7 +18,6 @@ public class LUUID {
      */
     public static synchronized String getUUID(Context context) {
         if(uniqueID != null){
-            LLog.d("++ uniqueID : "+uniqueID);
             return uniqueID;
         }
         uniqueID = LPreferences.getUUID(context);
@@ -26,7 +25,6 @@ public class LUUID {
             uniqueID = java.util.UUID.randomUUID().toString();
             LPreferences.setUUID(context, uniqueID);
         }
-        LLog.d("++ uniqueID : "+uniqueID);
         return uniqueID;
     }
 }

@@ -2,14 +2,12 @@ package com.lotterental.common.jsbridge;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
-import com.lotterental.generalrental.BuildConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;

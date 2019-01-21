@@ -30,7 +30,6 @@ public class LWebView extends WebView {
 
     public LWebView(Context context) {
         super(context);
-        LLog.d(">> LWebView");
         if (context == null) return;
         mContext = context;
         init();
@@ -38,7 +37,6 @@ public class LWebView extends WebView {
 
     public LWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LLog.d(">> LWebView");
         if (context == null) return;
         mContext = context;
         init();
@@ -46,7 +44,6 @@ public class LWebView extends WebView {
 
     public LWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LLog.d(">> LWebView");
         if (context == null) return;
         mContext = context;
         init();
@@ -55,7 +52,6 @@ public class LWebView extends WebView {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public LWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        LLog.d(">> LWebView");
         if (context == null) return;
         mContext = context;
         init();
@@ -149,9 +145,7 @@ public class LWebView extends WebView {
         this.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(final String url, final String userAgent, final String contentDisposition, final String mimeType, long contentLength) {
-                LLog.d("++ url=" + url + "/userAgent=" + userAgent + "/contentLength=" + contentLength + "/contentDisposition=" + contentDisposition + "/mimeType=" + mimeType);
-
-                LPermission.getInstance().checkStoragePermission(mContext, new LPermission.PermissionGrantedListener() {
+                 LPermission.getInstance().checkStoragePermission(mContext, new LPermission.PermissionGrantedListener() {
                     @Override
                     public void onPermissionGranted() {
                         try {
@@ -179,7 +173,6 @@ public class LWebView extends WebView {
                             } else {
                                 fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
                             }
-                            LLog.d("++ fileName : " + fileName);
                             request.setTitle(fileName);
                             request.allowScanningByMediaScanner();
                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);

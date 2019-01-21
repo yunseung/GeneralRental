@@ -50,17 +50,10 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
 public class MainActivity extends BaseActivity {
-    public static final String ROOT_PATH = Environment.
-            getExternalStorageDirectory() + "";
-    private static final String ROOTING_PATH_1 = "/system/bin/su";
-    private static final String ROOTING_PATH_2 = "/system/xbin/su";
-    private static final String ROOTING_PATH_3 = "/system/app/SuperUser.apk";
-    private static final String ROOTING_PATH_4 = "/data/data/com.noshufou.android.su";
-
-
     private ActivityMainBinding mBinding = null;
     private String mCallback = null;
     private BluetoothAdapter mBluetoothAdapter = null;
+    private boolean isRooting = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,9 +61,28 @@ public class MainActivity extends BaseActivity {
 
         try {
             Runtime.getRuntime().exec("su");
-            LLog.d("root", "rooting");
+            isRooting = true;
         } catch ( Exception e) {
-            LLog.d("root", "not rooting");
+            isRooting = false;
+        }
+
+        if (!isRooting) {
+            isRooting = CommonUtils.checkRootingFiles(CommonUtils.createFiles(RootFilesPath));
+        }
+
+
+        if (isRooting) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("불법 루팅된 단말에서는 사용할 수 없습니다.");
+            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            builder.setCancelable(false);
+            builder.create();
+            builder.show();
         }
 
         mBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
@@ -280,7 +292,7 @@ public class MainActivity extends BaseActivity {
                         finish();
                     }
                 });
-
+                builder.setCancelable(false);
                 builder.create();
                 builder.show();
             } else {
@@ -299,7 +311,7 @@ public class MainActivity extends BaseActivity {
 
                     }
                 });
-
+                builder.setCancelable(false);
                 builder.create();
                 builder.show();
             }
@@ -351,4 +363,45 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
+
+
+
+
+    public static final String ROOT_PATH = Environment.
+            getExternalStorageDirectory() + "";
+    private static final String ROOTING_PATH_1 = "/system/bin/su";
+    private static final String ROOTING_PATH_2 = "/system/xbin/su";
+    private static final String ROOTING_PATH_3 = "/system/app/SuperUser.apk";
+    private static final String ROOTING_PATH_4 = "/data/data/com.noshufou.android.su";
+    private static final String ROOTING_PATH_5 = "/su/bin/su";
+    private static final String ROOTING_PATH_6 = "/su/xbin/su";
+    private static final String ROOTING_PATH_7 = "/su/bin/.user/.su";
+    private static final String ROOTING_PATH_8 = "system/bin/.user/.su";
+    private static final String ROOTING_PATH_9 = "dev/com.noshufou.android.su";
+    private static final String ROOTING_PATH_10 = "data/data/com.tegrak.lagfix";
+    private static final String ROOTING_PATH_11 = "data/data/eu.chainfire.supersu";
+    private static final String ROOTING_PATH_12 = "data/data/com.jrummy.root.browserfree";
+    private static final String ROOTING_PATH_13 = "data/app/com.tegrak.lagfix.apk";
+    private static final String ROOTING_PATH_14 = "data/app/eu.chainfire.supersu.apk";
+    private static final String ROOTING_PATH_15 = "data/app/com.noshufou.android.su.apk";
+    private static final String ROOTING_PATH_16 = "data/app/com.jrummy.root.browserfree.apk";
+
+    public String[] RootFilesPath = new String[]{
+            ROOT_PATH + ROOTING_PATH_1 ,
+            ROOT_PATH + ROOTING_PATH_2 ,
+            ROOT_PATH + ROOTING_PATH_3 ,
+            ROOT_PATH + ROOTING_PATH_4 ,
+            ROOT_PATH + ROOTING_PATH_5 ,
+            ROOT_PATH + ROOTING_PATH_6 ,
+            ROOT_PATH + ROOTING_PATH_7 ,
+            ROOT_PATH + ROOTING_PATH_8 ,
+            ROOT_PATH + ROOTING_PATH_9 ,
+            ROOT_PATH + ROOTING_PATH_10 ,
+            ROOT_PATH + ROOTING_PATH_11 ,
+            ROOT_PATH + ROOTING_PATH_12 ,
+            ROOT_PATH + ROOTING_PATH_13 ,
+            ROOT_PATH + ROOTING_PATH_14 ,
+            ROOT_PATH + ROOTING_PATH_15 ,
+            ROOT_PATH + ROOTING_PATH_16
+    };
 }

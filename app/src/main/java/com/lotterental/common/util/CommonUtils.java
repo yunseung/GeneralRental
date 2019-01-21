@@ -54,6 +54,33 @@ public class CommonUtils {
     private static Uri mCaptureImageUri = null;                    // 캡쳐된 이미지 파일의 경우
 
     /**
+     * 루팅파일 의심 Path를 가진 파일들을 생성 한다.
+     */
+    public static File[] createFiles(String[] sfiles){
+        File[] rootingFiles = new File[sfiles.length];
+        for(int i=0 ; i < sfiles.length; i++){
+            rootingFiles[i] = new File(sfiles[i]);
+        }
+        return rootingFiles;
+    }
+
+    /**
+     * 루팅파일 여부를 확인 한다.
+     */
+    public static boolean checkRootingFiles(File... file){
+        boolean result = false;
+        for(File f : file){
+            if(f != null && f.exists() && f.isFile()){
+                result = true;
+                break;
+            }else{
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    /**
      * Bitmap이미지의 가로, 세로 사이즈를 리사이징 한다.
      *
      * @param source        원본 Bitmap 객체
