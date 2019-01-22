@@ -216,62 +216,71 @@ public class MainActivity extends BaseActivity {
         JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, jsonParam);
     }
 
-    public void reqExcelDownload(JSONObject obj, String callback) {
-        try {
-            JSONArray array = obj.getJSONArray("LIST");
-            String fileName = obj.getString("FILE_NM");
-
-            File sd = Environment.getExternalStorageDirectory();
-
-            File directory = new File(sd.getAbsolutePath());
-
-            if (!directory.isDirectory()) {
-                directory.mkdirs();
-            }
-
-            try {
-                File file = new File(directory, fileName);
-                WorkbookSettings workbookSettings = new WorkbookSettings();
-                workbookSettings.setLocale(new Locale(Locale.KOREAN.getLanguage(), Locale.KOREAN.getCountry()));
-
-                WritableWorkbook writableWorkbook = Workbook.createWorkbook(file, workbookSettings);
-
-                WritableSheet sheetA = writableWorkbook.createSheet("sheet A", 0);
-
-                int rowCnt = array.length();
-
-                for (int i = 0; i < rowCnt; i++) {
-                    sheetA.addCell(new Label(0, i, ((JSONObject)array.get(i)).getString("INDEX")));
-                    sheetA.addCell(new Label(1, i, ((JSONObject)array.get(i)).getString("EQUNR")));
-                }
-
-                writableWorkbook.write();
-                writableWorkbook.close();
-
-
-                Toast.makeText(getApplicationContext(), "엑셀 내보내기 완료", Toast.LENGTH_SHORT).show();
+    public void reqExcelDownload(final JSONObject obj, final String callback) {
+        LPermission.getInstance().checkStoragePermission(this, new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
                 try {
-                    JSONObject param = new JSONObject();
-                    param.put(mCallback, "succ");
-                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                    JSONArray array = obj.getJSONArray("LIST");
+                    String fileName = obj.getString("FILE_NM");
+
+                    File sd = Environment.getExternalStorageDirectory();
+
+                    File directory = new File(sd.getAbsolutePath());
+
+                    if (!directory.isDirectory()) {
+                        directory.mkdirs();
+                    }
+
+                    try {
+                        File file = new File(directory, fileName);
+                        WorkbookSettings workbookSettings = new WorkbookSettings();
+                        workbookSettings.setLocale(new Locale(Locale.KOREAN.getLanguage(), Locale.KOREAN.getCountry()));
+
+                        WritableWorkbook writableWorkbook = Workbook.createWorkbook(file, workbookSettings);
+
+                        WritableSheet sheetA = writableWorkbook.createSheet("sheet A", 0);
+
+                        int rowCnt = array.length();
+
+                        for (int i = 0; i < rowCnt; i++) {
+                            sheetA.addCell(new Label(0, i, ((JSONObject)array.get(i)).getString("INDEX")));
+                            sheetA.addCell(new Label(1, i, ((JSONObject)array.get(i)).getString("EQUNR")));
+                        }
+
+                        writableWorkbook.write();
+                        writableWorkbook.close();
+
+
+                        Toast.makeText(getApplicationContext(), "엑셀 내보내기 완료", Toast.LENGTH_SHORT).show();
+                        try {
+                            JSONObject param = new JSONObject();
+                            param.put(callback, "succ");
+                            JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                        } catch (JSONException e) {
+                            Common.printException(e);
+                        }
+                    } catch (IOException | WriteException e) {
+                        Common.printException(e);
+                        Toast.makeText(getApplicationContext(), "엑셀 내보내기 실패", Toast.LENGTH_SHORT).show();
+                        try {
+                            JSONObject param = new JSONObject();
+                            param.put(callback, "fail");
+                            JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                        } catch (JSONException e1) {
+                            Common.printException(e1);
+                        }
+                    }
                 } catch (JSONException e) {
                     Common.printException(e);
                 }
-            } catch (IOException | WriteException e) {
-                Common.printException(e);
-                Toast.makeText(getApplicationContext(), "엑셀 내보내기 실패", Toast.LENGTH_SHORT).show();
-                try {
-                    JSONObject param = new JSONObject();
-                    param.put(mCallback, "fail");
-                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
-                } catch (JSONException e1) {
-                    Common.printException(e1);
-                }
             }
-        } catch (JSONException e) {
-            Common.printException(e);
-        }
 
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
     }
 
     public void needUpdate(JSONObject param) {
