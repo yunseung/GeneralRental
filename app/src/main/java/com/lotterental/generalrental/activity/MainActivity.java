@@ -149,8 +149,9 @@ public class MainActivity extends BaseActivity {
             public void barcodeCallback(String barcode) {
                 try {
                     JSONObject param = new JSONObject();
-                    param.put(mCallback, barcode);
-                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                    // barcode bluetooth 기기를 사용할 때에는 무조건 barcodeSearch 로 보낸다.
+                    param.put("barcodeSearch", barcode);
+                    JavascriptSender.getInstance().callJavascriptFunc(mWebView, "barcodeSearch", param);
                 } catch (JSONException e) {
                     Common.printException(e);
                 }
@@ -244,8 +245,8 @@ public class MainActivity extends BaseActivity {
                         int rowCnt = array.length();
 
                         for (int i = 0; i < rowCnt; i++) {
-                            sheetA.addCell(new Label(0, i, ((JSONObject)array.get(i)).getString("INDEX")));
-                            sheetA.addCell(new Label(1, i, ((JSONObject)array.get(i)).getString("EQUNR")));
+                            sheetA.addCell(new Label(0, i, ((JSONObject) array.get(i)).getString("INDEX")));
+                            sheetA.addCell(new Label(1, i, ((JSONObject) array.get(i)).getString("EQUNR")));
                         }
 
                         writableWorkbook.write();
@@ -253,15 +254,13 @@ public class MainActivity extends BaseActivity {
 
 
                         Toast.makeText(getApplicationContext(), "엑셀 내보내기 완료", Toast.LENGTH_SHORT).show();
-                        try {
-                            JSONObject param = new JSONObject();
-                            param.put(callback, "succ");
-                            JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
-                        } catch (JSONException e) {
-                            Common.printException(e);
-                        }
-                    } catch (IOException | WriteException e) {
+
+                        JSONObject param = new JSONObject();
+                        param.put(callback, "succ");
+                        JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                    } catch (IOException | WriteException | JSONException e) {
                         Common.printException(e);
+
                         Toast.makeText(getApplicationContext(), "엑셀 내보내기 실패", Toast.LENGTH_SHORT).show();
                         try {
                             JSONObject param = new JSONObject();
@@ -304,7 +303,9 @@ public class MainActivity extends BaseActivity {
                 builder.setCancelable(false);
                 builder.create();
                 builder.show();
-            } else {
+            }
+            // else 는 사용 안하고 있음. (웹에서 Y만 보냄)
+            else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("새로운 버전이 있습니다. 업데이트 하시겠습니까?");
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -374,8 +375,6 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
-
     public static final String ROOT_PATH = Environment.
             getExternalStorageDirectory() + "";
     private static final String ROOTING_PATH_1 = "/system/bin/su";
@@ -396,21 +395,21 @@ public class MainActivity extends BaseActivity {
     private static final String ROOTING_PATH_16 = "data/app/com.jrummy.root.browserfree.apk";
 
     public String[] RootFilesPath = new String[]{
-            ROOT_PATH + ROOTING_PATH_1 ,
-            ROOT_PATH + ROOTING_PATH_2 ,
-            ROOT_PATH + ROOTING_PATH_3 ,
-            ROOT_PATH + ROOTING_PATH_4 ,
-            ROOT_PATH + ROOTING_PATH_5 ,
-            ROOT_PATH + ROOTING_PATH_6 ,
-            ROOT_PATH + ROOTING_PATH_7 ,
-            ROOT_PATH + ROOTING_PATH_8 ,
-            ROOT_PATH + ROOTING_PATH_9 ,
-            ROOT_PATH + ROOTING_PATH_10 ,
-            ROOT_PATH + ROOTING_PATH_11 ,
-            ROOT_PATH + ROOTING_PATH_12 ,
-            ROOT_PATH + ROOTING_PATH_13 ,
-            ROOT_PATH + ROOTING_PATH_14 ,
-            ROOT_PATH + ROOTING_PATH_15 ,
+            ROOT_PATH + ROOTING_PATH_1,
+            ROOT_PATH + ROOTING_PATH_2,
+            ROOT_PATH + ROOTING_PATH_3,
+            ROOT_PATH + ROOTING_PATH_4,
+            ROOT_PATH + ROOTING_PATH_5,
+            ROOT_PATH + ROOTING_PATH_6,
+            ROOT_PATH + ROOTING_PATH_7,
+            ROOT_PATH + ROOTING_PATH_8,
+            ROOT_PATH + ROOTING_PATH_9,
+            ROOT_PATH + ROOTING_PATH_10,
+            ROOT_PATH + ROOTING_PATH_11,
+            ROOT_PATH + ROOTING_PATH_12,
+            ROOT_PATH + ROOTING_PATH_13,
+            ROOT_PATH + ROOTING_PATH_14,
+            ROOT_PATH + ROOTING_PATH_15,
             ROOT_PATH + ROOTING_PATH_16
     };
 }
