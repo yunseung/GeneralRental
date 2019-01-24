@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,7 +25,6 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
-import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.generalrental.R;
 import com.lotterental.generalrental.databinding.ActivityExcelBinding;
@@ -64,6 +64,8 @@ public class ExcelActivity extends BaseActivity {
     private DecoratedBarcodeView barcodeScannerView = null;
 
     private String mExcelFileName = null;
+
+    private String mRecentBarcode = null;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -168,13 +170,28 @@ public class ExcelActivity extends BaseActivity {
     };
 
     private void dataSetCheck(String barcode) {
+        if (mRecentBarcode != null && mRecentBarcode.equals(barcode)) {
+            return;
+        }
+
+        mRecentBarcode = barcode;
+        boolean isExist = false;
         mBinding.lvExcel.requestFocusFromTouch();
         // 스캔 결과가 excel list 에 있는 eqNo 와 같은게 있다면 체크한다.
         for (int i = 0; i < mExcelList.size(); i++) {
             if ((mExcelList.get(i).getEqNo()).equals(barcode)) {
                 mExcelList.get(i).setIsExist("완료");
                 mBinding.lvExcel.setSelection(i);
+                isExist = true;
             }
+        }
+
+        if (isExist) {
+            final MediaPlayer mp = MediaPlayer.create(this, R.raw.sound_success);
+            mp.start();
+        } else {
+            final MediaPlayer mp = MediaPlayer.create(this, R.raw.sound_fail);
+            mp.start();
         }
 
         int scanCnt = 0;

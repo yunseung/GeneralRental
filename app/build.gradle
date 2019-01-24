@@ -33,7 +33,7 @@ android {
 
             //하단 부터 Build Variant에서 빌드선택후 빌드 하면 BuildConfig.Java파일에 변수가 생성됨.
             buildConfigField "boolean", "IS_DEV",  "false"
-            buildConfigField "String",  "WEB_URL",  "\"http://124.243.70.27/oam/mobile/login/loginMain\""
+            buildConfigField "String",  "WEB_URL",  "\"https://oa.lotterental.net/oam/mobile/login/loginMain\""
             buildConfigField "String",  "API_URL", "\"\""
             buildConfigField "String", "APP_DOWNLOAD_URL", "\"http://124.243.70.42:8812/oam/mobile\""
         }
