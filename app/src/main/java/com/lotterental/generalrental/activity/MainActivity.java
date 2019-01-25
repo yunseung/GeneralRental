@@ -14,10 +14,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.lotterental.LLog;
 import com.lotterental.common.Common;
@@ -55,14 +59,18 @@ public class MainActivity extends BaseActivity {
     private BluetoothAdapter mBluetoothAdapter = null;
     private boolean isRooting = false;
 
+    private JSONObject mSsoParam = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // 루팅검사
         try {
             Runtime.getRuntime().exec("su");
             isRooting = true;
-        } catch ( Exception e) {
+        } catch (Exception e) {
             isRooting = false;
         }
 
@@ -83,6 +91,31 @@ public class MainActivity extends BaseActivity {
             builder.setCancelable(false);
             builder.create();
             builder.show();
+        }
+        // 루팅검사 끝
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        try {
+            JSONObject ssoInfo = new JSONObject();
+            ssoInfo.put("v", getIntent().getStringArrayExtra("v")); // appVersion
+//            ssoInfo.put("u", getIntent().getStringArrayExtra("u")); // userId
+            ssoInfo.put("u", "M00040"); // userId
+            ssoInfo.put("ci", getIntent().getStringArrayExtra("ci")); // companyId
+            ssoInfo.put("cc", getIntent().getStringArrayExtra("cc")); // companyCode
+            ssoInfo.put("cn", getIntent().getStringArrayExtra("cn")); // companyName
+
+//            ssoInfo.put("v", "1.0");
+//            ssoInfo.put("u", "soo_young");
+//            ssoInfo.put("ci", "1012390214");
+//            ssoInfo.put("cc", "82");
+//            ssoInfo.put("cn", "neonexsoft");
+
+            mSsoParam = new JSONObject();
+            mSsoParam.put("SSO_INFO", ssoInfo);
+            mSsoParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
+            mSsoParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
+        } catch (JSONException e) {
+            Common.printException(e);
         }
 
         mBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
@@ -174,6 +207,10 @@ public class MainActivity extends BaseActivity {
         integrator.setCaptureActivity(ExcelActivity.class);
         integrator.setOrientationLocked(false);
         integrator.initiateScan();
+    }
+
+    public void onStartExcelActivity(View v) {
+
     }
 
     public void startFullScanActivity(String callback) {
@@ -329,6 +366,40 @@ public class MainActivity extends BaseActivity {
             Common.printException(e);
         }
     }
+
+    public void cannotReceiveToken(String callback) {
+        mCallback = callback;
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        if (token.isEmpty()) {
+            mHandler.sendEmptyMessageDelayed(Const.FCM_TOKEN_REQ, 3000);
+        } else {
+            JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, token);
+        }
+    }
+
+    public void onReqSsoInfo(String callback) {
+        try {
+            if (!mSsoParam.getJSONObject("SSO_INFO").getString("u").isEmpty()) {
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, "actionSsoInfo", mSsoParam);
+            } else {
+                return;
+            }
+        } catch (JSONException e) {
+            Common.printException(e);
+        }
+    }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Const.FCM_TOKEN_REQ:
+                    cannotReceiveToken(mCallback);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

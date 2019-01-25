@@ -5,10 +5,18 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -25,11 +33,16 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
+import com.lotterental.LLog;
 import com.lotterental.common.Common;
+import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
+import com.lotterental.generalrental.SoundItem;
+import com.lotterental.generalrental.SoundThread;
 import com.lotterental.generalrental.databinding.ActivityExcelBinding;
 import com.lotterental.generalrental.databinding.ItemItemRowBinding;
 import com.lotterental.generalrental.item.ExcelListItem;
+import com.lotterental.generalrental.network.PrinterSocketAsyncTask;
 import com.lotterental.generalrental.product.ChatServiceInit;
 import com.lotterental.generalrental.util.LPermission;
 
@@ -66,6 +79,10 @@ public class ExcelActivity extends BaseActivity {
     private String mExcelFileName = null;
 
     private String mRecentBarcode = null;
+
+    private SoundPool mSoundPool = null;
+
+
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -174,6 +191,11 @@ public class ExcelActivity extends BaseActivity {
             return;
         }
 
+        if (mSoundPool != null) {
+            mSoundPool.release();
+            mSoundPool = null;
+        }
+
         mRecentBarcode = barcode;
         boolean isExist = false;
         mBinding.lvExcel.requestFocusFromTouch();
@@ -187,11 +209,35 @@ public class ExcelActivity extends BaseActivity {
         }
 
         if (isExist) {
-            final MediaPlayer mp = MediaPlayer.create(this, R.raw.sound_success);
-            mp.start();
+            mSoundPool = new  SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+
+            int intSoundCorrect = mSoundPool.load(getApplicationContext(), R.raw.sound_success, 1);
+
+            mSoundPool.play(intSoundCorrect, 1.0f, 1.0f, 0, 0, 1.0f);
+
+            int waitLimit = 1000;
+            int waitCounter = 0;
+            int throttle = 100;
+
+            while(mSoundPool.play(intSoundCorrect, 1.f, 1.f, 1, 0, 1.f) == 0 && waitCounter < waitLimit){
+                waitCounter++;
+                SystemClock.sleep(throttle);
+            }
         } else {
-            final MediaPlayer mp = MediaPlayer.create(this, R.raw.sound_fail);
-            mp.start();
+            mSoundPool = new  SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+
+            int intSoundCorrect = mSoundPool.load(getApplicationContext(), R.raw.sound_fail, 1);
+
+            mSoundPool.play(intSoundCorrect, 1.0f, 1.0f, 0, 0, 1.0f);
+
+            int waitLimit = 1000;
+            int waitCounter = 0;
+            int throttle = 10;
+
+            while(mSoundPool.play(intSoundCorrect, 1.f, 1.f, 1, 0, 1.f) == 0 && waitCounter < waitLimit){
+                waitCounter++;
+                SystemClock.sleep(throttle);
+            }
         }
 
         int scanCnt = 0;
@@ -206,9 +252,13 @@ public class ExcelActivity extends BaseActivity {
         mAdapter.notifyDataSetChanged();
     }
 
+    public void onClickClear(View v) {
+        mExcelList.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+
     public void onOpenExplorerClick(View v) {
         // String[] mimeTypes = {"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}; // .xls & .xlsx
-
         LPermission.getInstance().checkStoragePermission(this, new LPermission.PermissionGrantedListener() {
             @Override
             public void onPermissionGranted() {

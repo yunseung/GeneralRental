@@ -235,7 +235,8 @@
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn2"
-                android:text="초기화" />
+                android:text="초기화"
+                android:onClick="onClickClear"/>
         </LinearLayout>
 
 

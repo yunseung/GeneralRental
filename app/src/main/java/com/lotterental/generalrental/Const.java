@@ -20,4 +20,6 @@ public class Const {
     public static final int BT_REQUEST_ENABLE = 20;
     public static final int MESSAGE_BARCODE = 2;
 
+    public static final int SSO_INTERVAL = 100;
+    public static final int FCM_TOKEN_REQ = 101;
 }

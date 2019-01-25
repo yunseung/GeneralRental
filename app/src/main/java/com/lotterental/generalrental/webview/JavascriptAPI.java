@@ -97,4 +97,18 @@ public class JavascriptAPI extends JSBridge {
             ((MainActivity) context).needUpdate(json.getJSONObject(JavaScriptBridge.PARAM));
         }
     }
+
+    @JSApi(invokeMethod = "cannotReceiveToken", explain = "FCM TOKEN 을 받지 못햇을 경우.", param = {""})
+    public void cannotReceiveToken(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof  MainActivity) {
+            ((MainActivity) context).cannotReceiveToken(json.getString(JavaScriptBridge.CALLBACK));
+        }
+    }
+
+    @JSApi(invokeMethod = "onReqSsoInfo", explain = "webLoading 이 완료됐다는 알림.", param = {""})
+    public void onReqSsoInfo(WebView webView, Context context, JSONObject json) throws JSONException {
+        if (context instanceof  MainActivity) {
+            ((MainActivity) context).onReqSsoInfo(json.getString(JavaScriptBridge.CALLBACK));
+        }
+    }
 }
