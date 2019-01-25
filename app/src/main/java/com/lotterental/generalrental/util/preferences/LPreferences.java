@@ -54,9 +54,9 @@ public class LPreferences {
         return pref.getBoolean(key, defValue);
     }
 
-    public static void setToken(Context context, String domain) {
+    public static void setToken(Context context, String token) {
         assert context != null;
-        setString(context, TOKEN, domain);
+        setString(context, TOKEN, token);
     }
 
     public static String getToken(Context context) {

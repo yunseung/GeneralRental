@@ -3,6 +3,7 @@ package com.lotterental;
 import android.util.Log;
 
 import com.lotterental.common.util.StackTraceInfo;
+import com.lotterental.generalrental.BuildConfig;
 
 public class LLog {
 
@@ -69,7 +70,7 @@ public class LLog {
      * @param log      : log
      */
     private static void print(int logLevel, String tag, String className, String log, boolean show) {
-//        if (!BuildConfig.IS_DEV || !BuildConfig.IS_TEST) {
+        if (!BuildConfig.IS_DEV) {
             int outputLength = 3000;
             int length = log.length();
 
@@ -126,9 +127,9 @@ public class LLog {
                         break;
                 }
             }
-//        }else{
-//            return;
-//        }
+        }else{
+            return;
+        }
 
     }
 

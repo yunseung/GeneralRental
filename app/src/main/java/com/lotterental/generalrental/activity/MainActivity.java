@@ -98,8 +98,8 @@ public class MainActivity extends BaseActivity {
         try {
             JSONObject ssoInfo = new JSONObject();
             ssoInfo.put("v", getIntent().getStringArrayExtra("v")); // appVersion
-//            ssoInfo.put("u", getIntent().getStringArrayExtra("u")); // userId
-            ssoInfo.put("u", "M00040"); // userId
+            ssoInfo.put("u", getIntent().getStringArrayExtra("u")); // userId
+//            ssoInfo.put("u", "M00040"); // userId
             ssoInfo.put("ci", getIntent().getStringArrayExtra("ci")); // companyId
             ssoInfo.put("cc", getIntent().getStringArrayExtra("cc")); // companyCode
             ssoInfo.put("cn", getIntent().getStringArrayExtra("cn")); // companyName
@@ -374,14 +374,21 @@ public class MainActivity extends BaseActivity {
         if (token.isEmpty()) {
             mHandler.sendEmptyMessageDelayed(Const.FCM_TOKEN_REQ, 3000);
         } else {
-            JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, token);
+            try {
+                JSONObject param = new JSONObject();
+                param.put(mCallback, token);
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, mCallback, param);
+                LPreferences.setToken(getApplicationContext(), token);
+            } catch (JSONException e) {
+                Common.printException(e);
+            }
         }
     }
 
     public void onReqSsoInfo(String callback) {
         try {
-            if (!mSsoParam.getJSONObject("SSO_INFO").getString("u").isEmpty()) {
-                JavascriptSender.getInstance().callJavascriptFunc(mWebView, "actionSsoInfo", mSsoParam);
+            if (mSsoParam.getJSONObject("SSO_INFO").has("u")) {
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, mSsoParam);
             } else {
                 return;
             }
