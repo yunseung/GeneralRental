@@ -19,6 +19,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,7 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
-public class ExcelActivity extends BaseActivity {
+public class ExcelActivity extends AppCompatActivity {
 
     private ActivityExcelBinding mBinding = null;
 

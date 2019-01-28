@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class ScanActivity extends BaseActivity {
+public class ScanActivity extends AppCompatActivity {
     private ActivityScanBinding mBinding = null;
 
     private ArrayList<String> mListViewItemList = new ArrayList<>();

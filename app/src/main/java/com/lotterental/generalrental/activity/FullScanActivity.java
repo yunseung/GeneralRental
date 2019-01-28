@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.ResultPoint;
@@ -23,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class FullScanActivity extends BaseActivity {
+public class FullScanActivity extends AppCompatActivity {
     private ActivityFullScanBinding mBinding = null;
 
     private CaptureManager capture;

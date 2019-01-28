@@ -95,25 +95,22 @@ public class MainActivity extends BaseActivity {
         // 루팅검사 끝
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        LLog.e("getIntent().getStringArrayExtra(\"v\") : " + getIntent().getStringExtra("v"));
         try {
             JSONObject ssoInfo = new JSONObject();
-            ssoInfo.put("v", getIntent().getStringArrayExtra("v")); // appVersion
-            ssoInfo.put("u", getIntent().getStringArrayExtra("u")); // userId
+            ssoInfo.put("v", getIntent().getStringExtra("v")); // appVersion
+            ssoInfo.put("u", getIntent().getStringExtra("u")); // userId
 //            ssoInfo.put("u", "M00040"); // userId
-            ssoInfo.put("ci", getIntent().getStringArrayExtra("ci")); // companyId
-            ssoInfo.put("cc", getIntent().getStringArrayExtra("cc")); // companyCode
-            ssoInfo.put("cn", getIntent().getStringArrayExtra("cn")); // companyName
-
-//            ssoInfo.put("v", "1.0");
-//            ssoInfo.put("u", "soo_young");
-//            ssoInfo.put("ci", "1012390214");
-//            ssoInfo.put("cc", "82");
-//            ssoInfo.put("cn", "neonexsoft");
+            ssoInfo.put("ci", getIntent().getStringExtra("ci")); // companyId
+            ssoInfo.put("cc", getIntent().getStringExtra("cc")); // companyCode
+            ssoInfo.put("cn", getIntent().getStringExtra("cn")); // companyName
 
             mSsoParam = new JSONObject();
             mSsoParam.put("SSO_INFO", ssoInfo);
             mSsoParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
             mSsoParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
+
+            LLog.e(mSsoParam.toString() + "+++++++++++++++++++++++++");
         } catch (JSONException e) {
             Common.printException(e);
         }
@@ -125,17 +122,6 @@ public class MainActivity extends BaseActivity {
         }
 
         mWebView = mBinding.mainWebView;
-
-        LPermission.getInstance().checkPhoneStatePermission(getApplicationContext(), new LPermission.PermissionGrantedListener() {
-            @Override
-            public void onPermissionGranted() {
-            }
-
-            @Override
-            public void onPermissionDenied() {
-                finish();
-            }
-        });
 
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -231,14 +217,26 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public void startPhoneCall(JSONObject obj) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" + obj.getString("TEL_NUM")));
-            startActivity(intent);
-        } catch (JSONException | SecurityException e) {
-            Common.printException(e);
-        }
+    public void startPhoneCall(final JSONObject obj) {
+        LPermission.getInstance().checkPhoneStatePermission(getApplicationContext(), new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    intent.setData(Uri.parse("tel:" + obj.getString("TEL_NUM")));
+                    startActivity(intent);
+                } catch (JSONException | SecurityException e) {
+                    Common.printException(e);
+                }
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                Toast.makeText(getApplicationContext(), "전화를 걸 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     public void reqAppInfo(String callback) {
