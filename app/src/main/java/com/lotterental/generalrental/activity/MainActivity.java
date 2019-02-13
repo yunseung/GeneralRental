@@ -95,7 +95,6 @@ public class MainActivity extends BaseActivity {
         // 루팅검사 끝
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        LLog.e("getIntent().getStringArrayExtra(\"v\") : " + getIntent().getStringExtra("v"));
         try {
             JSONObject ssoInfo = new JSONObject();
             ssoInfo.put("v", getIntent().getStringExtra("v")); // appVersion
@@ -110,7 +109,6 @@ public class MainActivity extends BaseActivity {
             mSsoParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
             mSsoParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
 
-            LLog.e(mSsoParam.toString() + "+++++++++++++++++++++++++");
         } catch (JSONException e) {
             Common.printException(e);
         }
@@ -239,17 +237,29 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    public void reqAppInfo(String callback) {
-        JSONObject jsonParam = new JSONObject();
-        try {
-            jsonParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
-            jsonParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            jsonParam.put("APP_VERSION", pInfo.versionName);
-        } catch (PackageManager.NameNotFoundException | JSONException e) {
-            Common.printException(e);
-        }
-        JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, jsonParam);
+    public void reqAppInfo(final String callback) {
+        LPermission.getInstance().checkPhoneStatePermission(getApplicationContext(), new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                JSONObject jsonParam = new JSONObject();
+                try {
+                    jsonParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
+                    jsonParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
+                    PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    jsonParam.put("APP_VERSION", pInfo.versionName);
+                } catch (PackageManager.NameNotFoundException | JSONException e) {
+                    Common.printException(e);
+                }
+                JavascriptSender.getInstance().callJavascriptFunc(mWebView, callback, jsonParam);
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
+
+
     }
 
     public void reqExcelDownload(final JSONObject obj, final String callback) {
