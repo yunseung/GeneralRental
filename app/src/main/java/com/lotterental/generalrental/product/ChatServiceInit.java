@@ -9,13 +9,25 @@ import android.os.ParcelUuid;
 
 import com.PointMobile.PMSyncService.BluetoothChatService;
 import com.PointMobile.PMSyncService.SendCommand;
-import com.lotterental.LLog;
 import com.lotterental.common.Common;
 import com.lotterental.generalrental.Const;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ChatServiceInit.
+ *
+ * SPP Bluetooth barcode reader 기기를 연결 및 초기화 해주는 클래스.
+ *
+ * 기기로부터 오는 결과값도 이 클래스에서 받으므로 결과값을 받길 원하는 클래스에서는 해당 클래스의 리스너를 등록해줘야 한다.
+ *
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
 public class ChatServiceInit {
     private static ChatServiceInit _instance = null;
 

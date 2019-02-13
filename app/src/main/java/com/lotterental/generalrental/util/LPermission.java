@@ -15,7 +15,13 @@ import com.lotterental.generalrental.R;
 import java.util.ArrayList;
 
 /**
+ * LPermission.
  * Android 6.0 이상에 대응한 request permission class.
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 public class LPermission {
 

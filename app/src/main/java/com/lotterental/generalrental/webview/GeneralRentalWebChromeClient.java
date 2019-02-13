@@ -6,11 +6,17 @@ import android.webkit.WebChromeClient;
 import com.lotterental.LLog;
 
 /**
- * Created by macpro on 2018. 6. 15..
+ * GeneralRentalWebChromeClient.
+ *
+ * WebView Console log 찍어주는 클래스.
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 
 public final class GeneralRentalWebChromeClient extends WebChromeClient {
-    private final String TAG = GeneralRentalWebChromeClient.class.getSimpleName();
 
     public GeneralRentalWebChromeClient() {
         super();

@@ -9,11 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import com.lotterental.generalrental.webview.LWebView;
 
 /**
- * Created by macpro on 2018. 7. 3..
- */
-
-/**
- * BaseActivity
+ * BaseActivity.
+ *
+ * 하나의 웹뷰를 여러 액티비티가 공유해서 사용할 수 있도록 만든 클래스. (웹뷰 내의 팝업 등..)
+ * 하지만 지금은 Main에서만 사용한다.
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 public abstract class BaseActivity extends AppCompatActivity {
     public LWebView mWebView = null;

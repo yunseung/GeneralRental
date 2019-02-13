@@ -5,17 +5,11 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
@@ -34,16 +28,11 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.DefaultDecoderFactory;
-import com.lotterental.LLog;
 import com.lotterental.common.Common;
-import com.lotterental.generalrental.Const;
 import com.lotterental.generalrental.R;
-import com.lotterental.generalrental.SoundItem;
-import com.lotterental.generalrental.SoundThread;
 import com.lotterental.generalrental.databinding.ActivityExcelBinding;
 import com.lotterental.generalrental.databinding.ItemItemRowBinding;
 import com.lotterental.generalrental.item.ExcelListItem;
-import com.lotterental.generalrental.network.PrinterSocketAsyncTask;
 import com.lotterental.generalrental.product.ChatServiceInit;
 import com.lotterental.generalrental.util.LPermission;
 
@@ -67,6 +56,18 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
+/**
+ * ExcelActivity.
+ *
+ * sd 카드 또는 내부저장소에 있는 excel 을 import 하고 export 하는 클래스.
+ *
+ * barcode reader 의 결과와 excel 데이터를 비교 처리하는 작업을 한다.
+ * jxl library 사용
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
 public class ExcelActivity extends AppCompatActivity {
 
     private ActivityExcelBinding mBinding = null;

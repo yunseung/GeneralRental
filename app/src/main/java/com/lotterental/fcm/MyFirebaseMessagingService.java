@@ -18,9 +18,10 @@ import java.util.Random;
 
 
 /**
- * 파이어 베이스 푸쉬 메시지
+ * FCM massage 받아오는 클래스.
  *
- * Created by n on 2017-04-25.
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

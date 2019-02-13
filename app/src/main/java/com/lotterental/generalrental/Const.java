@@ -1,11 +1,12 @@
 package com.lotterental.generalrental;
 
-/**
- * Created by macpro on 2018. 6. 21..
- */
 
 /**
- * ODS CONST.
+ *  CONST.
+ *
+ * 2019-02-13
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 public class Const {
     public static final String URL = "url";

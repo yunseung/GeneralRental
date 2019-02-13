@@ -17,6 +17,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * PrinterSocketAsyncTask.
+ *
+ * 현장에 있는 barcode printer 와 소캣통신 하는 asyncTask 클래스.
+ *
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
 public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean> {
     private WebView mWebView = null;
     private String mCallbackName = null;
@@ -34,8 +45,6 @@ public class PrinterSocketAsyncTask extends AsyncTask<JSONObject, Void, Boolean>
     protected Boolean doInBackground(JSONObject... jsonObjects) {
         String host;
         int port;
-        String type;
-        String pdaModelNr;
         String deviceId;
         String cmdCode;
         JSONArray list;

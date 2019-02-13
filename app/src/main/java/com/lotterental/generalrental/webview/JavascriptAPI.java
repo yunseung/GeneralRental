@@ -10,6 +10,17 @@ import com.lotterental.generalrental.activity.MainActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * JavascriptAPI.
+ *
+ * webView -> native 호출 함수 모아놓은 곳.
+ * @JSApi 참고.
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
 public class JavascriptAPI extends JSBridge {
 
     /**

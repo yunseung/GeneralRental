@@ -37,6 +37,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * ScanActivity.
+ *
+ * 웹에서 받아온 바코드 데이터를 뿌려주고 액티비티에서 스캔한 바코드와 비교하여 다시 웹으로 돌려주는 작업을 한다.
+ *
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
+
 public class ScanActivity extends AppCompatActivity {
     private ActivityScanBinding mBinding = null;
 

@@ -9,9 +9,10 @@ import com.lotterental.generalrental.util.preferences.LPreferences;
 
 
 /**
- * 파이어베이스 푸쉬
+ * FCM token 받아오는 클래스.
  *
- * Created by n on 2017-04-25.
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 

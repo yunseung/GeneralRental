@@ -23,7 +23,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-
+/**
+ * FullScanActivity.
+ *
+ * 바코드 스캔 화면. (전체화면)
+ *
+ * zxing library 와 Bluetooth barcode 기기만 사용하는 클래스
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
 public class FullScanActivity extends AppCompatActivity {
     private ActivityFullScanBinding mBinding = null;
 

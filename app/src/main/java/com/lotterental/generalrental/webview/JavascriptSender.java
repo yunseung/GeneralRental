@@ -7,7 +7,14 @@ import com.lotterental.LLog;
 
 
 /**
- * Created by macpro on 2018. 7. 2..
+ * JavascriptSender.
+ *
+ * native -> webView javascript call 하는 곳.
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 
 public class JavascriptSender {
@@ -28,7 +35,7 @@ public class JavascriptSender {
      *
      * @param javascript 자바스크립트 코드
      */
-    public void callJavascript(final WebView webView, final String javascript) {
+    private void callJavascript(final WebView webView, final String javascript) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             ValueCallback<String> resultCallback = null;
             webView.evaluateJavascript(javascript, resultCallback);

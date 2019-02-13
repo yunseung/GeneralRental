@@ -2,7 +2,6 @@ package com.lotterental.generalrental.util;
 
 import android.content.Context;
 
-import com.lotterental.LLog;
 import com.lotterental.generalrental.util.preferences.LPreferences;
 
 

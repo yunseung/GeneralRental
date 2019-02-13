@@ -24,6 +24,16 @@ import com.lotterental.generalrental.util.LPermission;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+/**
+ * LWebView.
+ *
+ * webView 설정.......
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
 public class LWebView extends WebView {
 
     private Context mContext = null;

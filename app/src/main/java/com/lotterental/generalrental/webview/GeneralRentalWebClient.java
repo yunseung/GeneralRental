@@ -22,7 +22,15 @@ import com.lotterental.LLog;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by macpro on 2018. 6. 15..
+ * GeneralRentalWebClient.
+ *
+ * WebView 의 상태를 모니터링 및 관리해줄 수 있는 클래스.
+ * native - webView 통신간 timing issue 가 발생할 때 이 클래스를 활용할 수 있다.
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
  */
 
 public final class GeneralRentalWebClient extends WebViewClient {

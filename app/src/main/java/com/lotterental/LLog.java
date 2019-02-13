@@ -5,6 +5,13 @@ import android.util.Log;
 import com.lotterental.common.util.StackTraceInfo;
 import com.lotterental.generalrental.BuildConfig;
 
+/**
+ *  LLog.
+ *
+ * 2019-02-13
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
 public class LLog {
 
     private static String LOG_TAG = "LOTTE_RENTAL";

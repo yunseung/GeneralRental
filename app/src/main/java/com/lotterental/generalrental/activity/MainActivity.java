@@ -53,6 +53,20 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
+
+/**
+ * MainActivity.
+ *
+ * 웬만한 Web 과의 통신은 여기서 한다.
+ *
+ * Bluetooth 초기화, 루팅검사, mMoin 연동 등..
+ *
+ * 2019-02-13
+ *
+ * yunseung kim.
+ * yun_87k@naver.com
+ */
+
 public class MainActivity extends BaseActivity {
     private ActivityMainBinding mBinding = null;
     private String mCallback = null;
@@ -461,6 +475,9 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    /**
+     * 루팅검사에 필요한 root
+     */
     public static final String ROOT_PATH = Environment.
             getExternalStorageDirectory() + "";
     private static final String ROOTING_PATH_1 = "/system/bin/su";
