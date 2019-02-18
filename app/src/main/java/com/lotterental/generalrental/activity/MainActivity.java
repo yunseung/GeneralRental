@@ -109,23 +109,33 @@ public class MainActivity extends BaseActivity {
         // 루팅검사 끝
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        try {
-            JSONObject ssoInfo = new JSONObject();
-            ssoInfo.put("v", getIntent().getStringExtra("v")); // appVersion
-            ssoInfo.put("u", getIntent().getStringExtra("u")); // userId
+        LPermission.getInstance().checkPhoneStatePermission(getApplicationContext(), new LPermission.PermissionGrantedListener() {
+            @Override
+            public void onPermissionGranted() {
+                try {
+                    JSONObject ssoInfo = new JSONObject();
+                    ssoInfo.put("v", getIntent().getStringExtra("v")); // appVersion
+                    ssoInfo.put("u", getIntent().getStringExtra("u")); // userId
 //            ssoInfo.put("u", "M00040"); // userId
-            ssoInfo.put("ci", getIntent().getStringExtra("ci")); // companyId
-            ssoInfo.put("cc", getIntent().getStringExtra("cc")); // companyCode
-            ssoInfo.put("cn", getIntent().getStringExtra("cn")); // companyName
+                    ssoInfo.put("ci", getIntent().getStringExtra("ci")); // companyId
+                    ssoInfo.put("cc", getIntent().getStringExtra("cc")); // companyCode
+                    ssoInfo.put("cn", getIntent().getStringExtra("cn")); // companyName
 
-            mSsoParam = new JSONObject();
-            mSsoParam.put("SSO_INFO", ssoInfo);
-            mSsoParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
-            mSsoParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
+                    mSsoParam = new JSONObject();
+                    mSsoParam.put("SSO_INFO", ssoInfo);
+                    mSsoParam.put("DEVICE_ID", CommonUtils.getDeviceIMEI(getApplicationContext()));
+                    mSsoParam.put("FCM_TOKEN", LPreferences.getToken(getApplicationContext()));
 
-        } catch (JSONException e) {
-            Common.printException(e);
-        }
+                } catch (JSONException e) {
+                    Common.printException(e);
+                }
+            }
+
+            @Override
+            public void onPermissionDenied() {
+                finish();
+            }
+        });
 
         mBinding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
@@ -272,8 +282,6 @@ public class MainActivity extends BaseActivity {
                 finish();
             }
         });
-
-
     }
 
     public void reqExcelDownload(final JSONObject obj, final String callback) {
