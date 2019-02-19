@@ -59,10 +59,6 @@ public class ChatServiceInit {
         _instance = null;
     }
 
-    private static class LazyHolder {
-        private static ChatServiceInit INSTANCE = new ChatServiceInit();
-    }
-
     public void setBarcodeCallbackListener(BarcodeCallbackListener listener) {
         if (mBarcodeCallbackListener != null) {
             mBarcodeCallbackListener = null;
@@ -71,7 +67,9 @@ public class ChatServiceInit {
     }
 
     public void disconnect() {
-        mChatService.stop();
+        if (mChatService != null) {
+            mChatService.stop();
+        }
     }
 
     private void setupChat() {
@@ -92,13 +90,17 @@ public class ChatServiceInit {
     private void selectDevice() {
         List<String> listItems = new ArrayList<>();
         // TODO bondedDevice 가져오는 순서가.. 최근 등록된 애부터 가져오는게 아니라 이름 순으로 가져오는 느낌임.. 테스트 필요..
-        for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
-            // bluetooth type check
-            if (device.fetchUuidsWithSdp()) {
-                ParcelUuid[] uu = device.getUuids();
-                for (ParcelUuid u : uu) {
-                    if (u.getUuid().toString().toUpperCase().equals(SPP_UNIQUE_KEY)) {
-                        listItems.add(device.getName() + "\n" + device.getAddress());
+        if (mBluetoothAdapter.getBondedDevices() != null) {
+            for (BluetoothDevice device : mBluetoothAdapter.getBondedDevices()) {
+                // bluetooth type check
+                if (device.fetchUuidsWithSdp()) {
+                    ParcelUuid[] uu = device.getUuids();
+                    if (uu != null) {
+                        for (ParcelUuid u : uu) {
+                            if (u.getUuid().toString().toUpperCase().equals(SPP_UNIQUE_KEY)) {
+                                listItems.add(device.getName() + "\n" + device.getAddress());
+                            }
+                        }
                     }
                 }
             }

@@ -59,10 +59,12 @@ public class JavaScriptBridge {
      */
     @JavascriptInterface
     public void invoke(final String jsonString) {
+        LLog.e(jsonString);
         mUiHandler.post(new Runnable() {
             public void run() {
                 try {
                     final JSONObject json = new JSONObject(jsonString);
+
 
                     //JavascriptAPI.class 파일 안에 JSBridge annotaion{invokeMethod}에 설정된 api와 이름이 같은 메소드를 실행한다.
                     final Method[] methods = javaScriptApiClass.getMethods();

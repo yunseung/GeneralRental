@@ -176,7 +176,7 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
+        ChatServiceInit.getInstance(getApplicationContext()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
             @Override
             public void barcodeCallback(String barcode) {
                 dataSetCheck(barcode);

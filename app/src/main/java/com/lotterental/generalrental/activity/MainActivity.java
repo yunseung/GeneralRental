@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.lotterental.LLog;
@@ -38,6 +39,7 @@ import com.lotterental.generalrental.util.preferences.LPreferences;
 import com.lotterental.generalrental.webview.JavascriptAPI;
 import com.lotterental.generalrental.webview.JavascriptSender;
 
+import io.fabric.sdk.android.Fabric;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,6 +80,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         // 루팅검사
@@ -116,7 +119,6 @@ public class MainActivity extends BaseActivity {
                     JSONObject ssoInfo = new JSONObject();
                     ssoInfo.put("v", getIntent().getStringExtra("v")); // appVersion
                     ssoInfo.put("u", getIntent().getStringExtra("u")); // userId
-//            ssoInfo.put("u", "M00040"); // userId
                     ssoInfo.put("ci", getIntent().getStringExtra("ci")); // companyId
                     ssoInfo.put("cc", getIntent().getStringExtra("cc")); // companyCode
                     ssoInfo.put("cn", getIntent().getStringExtra("cn")); // companyName
@@ -150,6 +152,7 @@ public class MainActivity extends BaseActivity {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         initializeElements();
+
     }
 
     @Override
@@ -168,8 +171,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        ChatServiceInit.getInstance(getApplication()).disconnect();
-        ChatServiceInit.getInstance(getApplication()).killInstance();
+        ChatServiceInit.getInstance(getApplicationContext()).disconnect();
+        ChatServiceInit.getInstance(getApplicationContext()).killInstance();
         super.onDestroy();
     }
 
@@ -185,7 +188,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setChatServiceListener() {
-        ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
+        ChatServiceInit.getInstance(getApplicationContext()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
             @Override
             public void barcodeCallback(String barcode) {
                 try {
@@ -473,7 +476,6 @@ public class MainActivity extends BaseActivity {
                     setChatServiceListener();
                 } else {
                     // User did not enable Bluetooth or an error occurred
-                    LLog.d("BT not enabled");
                     Toast.makeText(this, "단말기의 블루투스를 활성화 해주세요", Toast.LENGTH_SHORT).show();
                 }
                 break;

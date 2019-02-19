@@ -71,7 +71,7 @@ public class FullScanActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        ChatServiceInit.getInstance(getApplication()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
+        ChatServiceInit.getInstance(getApplicationContext()).setBarcodeCallbackListener(new ChatServiceInit.BarcodeCallbackListener() {
             @Override
             public void barcodeCallback(String barcode) {
                 Intent i = new Intent();
